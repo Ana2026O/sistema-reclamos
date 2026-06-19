@@ -1,7 +1,4 @@
 from django.db import models
-
-# creando nuestro modelo de datos del sistema de reclamos
-
 from django.contrib.auth.models import User
 
 
@@ -13,36 +10,23 @@ class Categoria(models.Model):
         return self.nombre
 
 
+class Estado(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
+
+
+class Prioridad(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
+
+
 class Reclamo(models.Model):
-
-    PRIORIDADES = [
-        ('Baja', 'Baja'),
-        ('Media', 'Media'),
-        ('Alta', 'Alta'),
-    ]
-
-    ESTADOS = [
-        ('Nuevo', 'Nuevo'),
-        ('En Analisis', 'En Analisis'),
-        ('En Proceso', 'En Proceso'),
-        ('Resuelto', 'Resuelto'),
-        ('Cerrado', 'Cerrado'),
-    ]
-
     asunto = models.CharField(max_length=200)
     descripcion = models.TextField()
-
-    prioridad = models.CharField(
-        max_length=10,
-        choices=PRIORIDADES,
-        default='Media'
-    )
-
-    estado = models.CharField(
-        max_length=20,
-        choices=ESTADOS,
-        default='Nuevo'
-    )
 
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
@@ -56,12 +40,21 @@ class Reclamo(models.Model):
         on_delete=models.CASCADE
     )
 
+    estado = models.ForeignKey(
+        Estado,
+        on_delete=models.CASCADE
+    )
+
+    prioridad = models.ForeignKey(
+        Prioridad,
+        on_delete=models.CASCADE
+    )
+
     def __str__(self):
         return f"{self.id} - {self.asunto}"
 
 
-class Comentario(models.Model):
-
+class Seguimiento(models.Model):
     comentario = models.TextField()
 
     fecha = models.DateTimeField(auto_now_add=True)
@@ -77,4 +70,4 @@ class Comentario(models.Model):
     )
 
     def __str__(self):
-        return f"Comentario {self.id}"
+        return f"Seguimiento {self.id}"

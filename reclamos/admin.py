@@ -1,9 +1,9 @@
-from django.contrib import admin
 
-# Register your models here.
 from django.contrib import admin
-from .models import Categoria, Reclamo, Comentario
+from .models import Categoria, Estado, Prioridad, Reclamo, Seguimiento
 
 admin.site.register(Categoria)
+admin.site.register(Estado)
+admin.site.register(Prioridad)
 admin.site.register(Reclamo)
-admin.site.register(Comentario)
+admin.site.register(Seguimiento)
