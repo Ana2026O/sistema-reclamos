@@ -33,8 +33,10 @@ class ReclamoForm(forms.ModelForm):
             'prioridad': forms.Select(
                 attrs={'class': 'form-control'}
             ),
+        }
 
-            class ConsultaReclamoForm(forms.Form):
+
+class ConsultaReclamoForm(forms.Form):
 
     numero_reclamo = forms.IntegerField(
         label="Número de Reclamo",
@@ -42,4 +44,3 @@ class ReclamoForm(forms.ModelForm):
             attrs={'class': 'form-control'}
         )
     )
-        }
