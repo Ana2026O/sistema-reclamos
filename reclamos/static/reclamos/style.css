@@ -1,0 +1,82 @@
+/* Fondo azul oscuro */
+body {
+    background-color: #003366;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Encabezado */
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Menú dentro de rectángulo celeste */
+.menu-celeste {
+    background-color: rgba(173, 216, 230, 0.8); /* celeste claro */
+    padding: 15px;
+    border-radius: 8px;
+    display: inline-block; /* para que se centre */
+    margin-top: 20px;
+}
+
+.menu-celeste a {
+    color: #003366; /* azul oscuro para contraste */
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 25px;
+    font-size: 18px;
+}
+
+.menu-celeste a:hover {
+    text-decoration: underline;
+}
+
+/* Rectángulo celeste para contenido */
+.contenedor-celeste {
+    background-color: rgba(173, 216, 230, 0.8);
+    padding: 30px;
+    margin: 40px auto;
+    max-width: 700px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Formularios */
+form {
+    max-width: 500px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #003366;
+}
+
+input, textarea {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+/* Botón naranja */
+button {
+    background-color: #ff6600;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #e65c00;
+}
