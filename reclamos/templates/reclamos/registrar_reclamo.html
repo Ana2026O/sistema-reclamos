@@ -1,38 +1,286 @@
-{% extends 'reclamos/base.html' %}
-{% load static %}
 
-{% block title %}Registrar Reclamo{% endblock %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registrar Reclamo</title>
 
-{% block content %}
-<section class="contenedor-celeste">
-  <h2>Registrar Reclamo</h2>
-  <p>Complete el formulario para enviar su reclamo</p>
+<style>
 
-  <form method="post">
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#f2f2f2;
+}
+
+/* ===== MENU SUPERIOR ===== */
+
+.header{
+    background:#1f4f82;
+    color:white;
+    height:70px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 40px;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.subtitulo{
+    font-size:20px;
+    font-weight:normal;
+}
+
+.menu{
+    display:flex;
+    gap:40px;
+    font-size:18px;
+}
+
+/* ===== BANNER ===== */
+
+.banner{
+    height:220px;
+
+    background:
+    linear-gradient(
+        rgba(20,70,120,0.75),
+        rgba(20,70,120,0.75)
+    ),
+    url("/static/reclamos/img/banner.jpg");
+
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+
+    display:flex;
+    align-items:center;
+}
+
+.banner-texto{
+    margin-left:80px;
+}
+
+.banner-texto h3{
+    font-size:20px;
+    margin-bottom:15px;
+    font-weight:normal;
+}
+
+.banner-texto h1{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.banner-texto p{
+    font-size:18px;
+}
+
+/* ===== TITULO FORMULARIO ===== */
+
+.titulo-form{
+   .titulo-form{
+    background:#d9d9d9;
+    padding:8px 50px;
+    font-size:18px;
+    margin-bottom:10px;
+   }
+}
+/* ===== FORMULARIO ===== */
+
+.formulario{
+    width:95%;
+    max-width:1400px;
+    margin:10px auto;
+}
+
+.fila{
+    display:flex;
+    gap:40px;
+    margin-bottom:20=px;
+}
+.campo{
+    flex:1;
+}
+
+.campo label{
+    display:block;
+    margin-bottom:5px;
+    font-size:18px;
+}
+
+.campo input,
+.campo select,
+.campo textarea{
+
+    width:100%;
+    padding:8px;
+
+    border:1px solid #b5b5b5;
+
+    background:white;
+
+    border-radius:6px;
+
+    font-size:16px;
+}
+input[type="text"],
+input[type="email"]{
+    width:100%;
+    padding:8px;
+    border:1px solid #b5b5b5;
+    border-radius:6px;
+    background:white;
+    font-size:16px;
+}
+
+.campo{
+    flex:1;
+}
+
+.campo label{
+    display:block;
+    margin-bottom:18px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+textarea{
+    height:60px;
+    resize:none;
+}
+
+/* ===== BOTON ===== */
+
+.boton-area{
+    text-align:right;
+    margin-top:20px;
+}
+
+.boton{
+    background:#f4a300;
+    color:white;
+
+    border:none;
+
+    padding:15px 50px;Z
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+.fila-datos{
+    margin-top:12px;
+}
+.fila-descripcion{
+    margin-top:8px;
+}
+.descripcion-campo{
+    width:75%;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div>
+        <span class="logo">Reclamos</span>
+        <span class="subtitulo">
+            - Sistema de atención al cliente
+        </span>
+    </div>
+
+    <div class="menu">
+        <span>Mis Consultas</span>
+        <span>Gestión</span>
+    </div>
+
+</header>
+
+<section class="banner">
+
+    <div class="banner-texto">
+
+        <h3>ATENCIÓN AL CLIENTE</h3>
+
+        <h1>
+            ¿Tuviste un inconveniente?<br>
+            Registra tu reclamo aquí
+        </h1>
+
+        <p>
+            Nuestro equipo revisará tu caso a la brevedad.
+        </p>
+
+    </div>
+
+</section>
+
+<div class="titulo-form">
+    Ingrese su reclamo aquí
+</div>
+
+<form method="post" class="formulario">
+
     {% csrf_token %}
 
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
+<div class="fila">
 
-    <label for="apellido">Apellido:</label>
-    <input type="text" id="apellido" name="apellido" required>
+    <div class="campo">
+        <label>Nombre y Apellido</label>
+        <input type="text" name="nombre">
+    </div>
 
-    <label for="dni">DNI:</label>
-    <input type="text" id="dni" name="dni" required>
+    <div class="campo">
+        <label>Correo Electrónico</label>
+        <input type="email" name="correo">
+    </div>
 
-    <label for="email">Correo electrónico:</label>
-    <input type="email" id="email" name="email" required>
+</div>
 
-    <label for="telefono">Teléfono:</label>
-    <input type="tel" id="telefono" name="telefono">
+<div class="fila fila-datos">
 
-    <label for="direccion">Dirección:</label>
-    <input type="text" id="direccion" name="direccion">
+    <div class="campo">
+        <label>Teléfono</label>
+        <input type="text" name="telefono">
+    </div>
 
-    <label for="descripcion">Descripción del reclamo:</label>
-    <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+    <div class="campo">
+        <label>Asunto</label>
+        {{ form.asunto }}
+    </div>
 
-    <button type="submit">Enviar Reclamo</button>
-  </form>
-</section>
-{% endblock %}
+</div>
+
+<div class="fila fila-descripcion">
+
+    <div class="campo descripcion-campo">
+    <label>Descripción del Reclamo</label>
+    {{ form.descripcion }}
+    </div>
+
+</div>
+
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends 'reclamos/base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="contenedor-celeste">
+  <h2>Iniciar Sesión</h2>
+  <p>Ingrese sus credenciales para acceder al sistema</p>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <label for="username">Usuario:</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Ingresar</button>
+  </form>
+</section>
+{% endblock %}
