@@ -81,7 +81,7 @@ body{
 }
 
 .banner-texto h1{
-    font-size:42px;
+    font-size:28px;
     margin-bottom:15px;
 }
 
@@ -91,14 +91,14 @@ body{
 
 /* ===== TITULO FORMULARIO ===== */
 
-.titulo-form{
+
    .titulo-form{
     background:#d9d9d9;
     padding:8px 50px;
     font-size:18px;
     margin-bottom:10px;
    }
-}
+
 /* ===== FORMULARIO ===== */
 
 .formulario{
@@ -110,7 +110,7 @@ body{
 .fila{
     display:flex;
     gap:40px;
-    margin-bottom:20=px;
+    margin-bottom:20px;
 }
 .campo{
     flex:1;
@@ -123,7 +123,20 @@ body{
 }
 
 .campo input,
-.campo select,
+
+
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #b5b5b5;
+    border-radius: 6px;
+    background: white;
+    font-size: 16px;
+}
+
+
+
+
 .campo textarea{
 
     width:100%;
@@ -165,10 +178,13 @@ textarea{
 
 /* ===== BOTON ===== */
 
-.boton-area{
-    text-align:right;
-    margin-top:20px;
+.boton-area {
+    position: fixed;
+    bottom: 1px;   /* distancia desde abajo */
+    right: 70px;    /* alineado a la derecha */
+
 }
+
 
 .boton{
     background:#f4a300;
@@ -176,9 +192,9 @@ textarea{
 
     border:none;
 
-    padding:15px 50px;Z
+    padding:10px 10px;
 
-    font-size:20px;
+    font-size:14px;
 
     font-weight:bold;
 
@@ -194,24 +210,55 @@ textarea{
     width:75%;
 }
 
+.boton i {
+    margin-right: 8px;   /* espacio entre el ícono y el texto */
+    font-size: 1.2em;    /* tamaño del ícono relativo al texto */
+    vertical-align: middle; /* lo centra verticalmente */
+}
+
+
+
+
+
+
 </style>
 </head>
+
+
+  
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+
+
+    
+
 
 <body>
 
 <header class="header">
 
+
+
     <div>
-        <span class="logo">Reclamos</span>
-        <span class="subtitulo">
-            - Sistema de atención al cliente
-        </span>
+       <h1 class="logo">
+    <i class="fa-solid fa-file-alt"></i> Reclamos
+</h1>
+<p class="subtitulo">Sistema de atención al cliente</p>
+
     </div>
 
-    <div class="menu">
-        <span>Mis Consultas</span>
-        <span>Gestión</span>
-    </div>
+
+
+
+    
+<nav class="menu">
+    <span><i class="fa-solid fa-comments"></i> Mis Consultas</span>
+    <span><i class="fa-solid fa-gear"></i> Gestión</span>
+</nav>
+        
+
+    
 
 </header>
 
@@ -263,10 +310,20 @@ textarea{
         <input type="text" name="telefono">
     </div>
 
-    <div class="campo">
-        <label>Asunto</label>
-        {{ form.asunto }}
-    </div>
+
+
+  <div class="campo">
+    <label>Categoría</label>
+    <select name="categoria">
+        <option value="facturacion">Facturación</option>
+        <option value="atencion">Atención al cliente</option>
+        <option value="servicio">Servicio técnico</option>
+    </select>
+</div>
+
+
+
+
 
 </div>
 
@@ -276,6 +333,18 @@ textarea{
     <label>Descripción del Reclamo</label>
     {{ form.descripcion }}
     </div>
+    
+
+    <!-- BOTÓN DE ENVÍO -->
+    
+    <div class="boton-area">
+    <button type="submit" class="boton">
+        <i class="fa-solid fa-paper-plane"></i> Enviar Reclamo
+    </button>
+</div>
+
+
+
 
 </div>
 

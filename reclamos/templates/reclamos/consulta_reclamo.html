@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consultas</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#dbeaf2;
+}
+
+/* MENU */
+
+.header{
+    height:80px;
+    background:#1f4f82;
+    color:white;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 40px;
+}
+
+.logo{
+    font-size:18px;
+}
+
+.logo strong{
+    font-size:22px;
+}
+
+.menu{
+    display:flex;
+    align-items:center;
+    gap:40px;
+}
+
+.titulo-consultas{
+    font-size:28px;
+}
+
+/* CONTENIDO */
+
+.contenedor{
+    width:1100px;
+    margin:30px auto;
+}
+
+.titulo{
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+.titulo::before{
+    content:"";
+    display:inline-block;
+    width:10px;
+    height:30px;
+    background:#f5a300;
+    margin-right:15px;
+    vertical-align:middle;
+}
+
+.panel{
+    background:#cfe0eb;
+    padding:40px;
+}
+
+.subtitulo{
+    font-size:18px;
+    color:#1f4f82;
+    margin-bottom:40px;
+}
+
+/* FORM */
+
+.formulario{
+    background:#dceaf3;
+    padding:30px;
+}
+
+.fila{
+    display:flex;
+    gap:60px;
+}
+
+.campo{
+    flex:1;
+}
+
+.campo label{
+    display:block;
+    margin-bottom:8px;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.campo input{
+    width:100%;
+    height:40px;
+    border:none;
+    background:white;
+    padding:10px;
+}
+
+.botones{
+
+    margin-top:40px;
+
+    display:flex;
+    justify-content:space-between;
+}
+
+.btn-consultar{
+
+    background:#1f4f82;
+    color:white;
+
+    border:none;
+
+    padding:12px 30px;
+
+    font-size:18px;
+
+    cursor:pointer;
+}
+
+.btn-nuevo{
+
+    background:#f28c28;
+    color:white;
+
+    border:none;
+
+    padding:12px 30px;
+
+    font-size:18px;
+
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="logo">
+        <strong>Reclamos</strong>
+        - Sistema de atención al cliente
+    </div>
+
+    <div class="menu">
+        <div class="titulo-consultas">
+            Consultas
+        </div>
+
+        <div>Salir</div>
+    </div>
+
+</header>
+
+<div class="contenedor">
+
+    <div class="titulo">
+        Hacer mis consultas
+    </div>
+
+    <div class="panel">
+
+        <div class="subtitulo">
+            Consulte el estado de su reclamo
+        </div>
+
+        <form class="formulario">
+
+            <div class="fila">
+
+                <div class="campo">
+                    <label>NOMBRE Y APELLIDO</label>
+                    <input type="text">
+                </div>
+
+                <div class="campo">
+                    <label>NUMERO DE REFERENCIA</label>
+                    <input type="text">
+                </div>
+
+            </div>
+
+            <div class="botones">
+
+                <button
+                    type="submit"
+                    class="btn-consultar">
+                    CONSULTAR ESTADO
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-nuevo">
+                    Nuevo reclamo
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

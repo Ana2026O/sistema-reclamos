@@ -1,23 +1,277 @@
-{% extends 'reclamos/base.html' %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="es">
 
-{% block title %}Login{% endblock %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Administrador</title>
 
-{% block content %}
-<section class="contenedor-celeste">
-  <h2>Iniciar Sesión</h2>
-  <p>Ingrese sus credenciales para acceder al sistema</p>
+<style>
 
-  <form method="post">
-    {% csrf_token %}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
 
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" required>
+body{
+    height:100vh;
 
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" required>
+    background:
+    linear-gradient(
+        rgba(30,70,110,0.45),
+        rgba(30,70,110,0.45)
+    ),
+    url("/static/reclamos/img/login.jpg");
 
-    <button type="submit">Ingresar</button>
-  </form>
-</section>
-{% endblock %}
+    background-size:cover;
+    background-position:center;
+
+    overflow:hidden;
+}
+
+/* PANEL IZQUIERDO */
+
+.lateral{
+
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    width:360px;
+    height:100%;
+
+    background:#1f4f82;
+
+    color:white;
+}
+
+.logo-box{
+
+    height:220px;
+
+    background:#cfe0eb;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+}
+
+.logo{
+
+    font-size:70px;
+    margin-bottom:10px;
+}
+
+.nombre-sistema{
+
+    text-align:center;
+
+    font-size:18px;
+    font-weight:bold;
+}
+
+.titulo-admin{
+
+    margin:120px 35px 40px;
+
+    font-size:28px;
+    font-weight:bold;
+}
+
+.texto-admin{
+
+    margin-left:35px;
+
+    font-size:18px;
+
+    color:#dce8f2;
+}
+
+/* LOGIN */
+
+.login-box{
+
+    width:380px;
+
+    background:#dcecf5;
+
+    border:1px solid #1f4f82;
+
+    border-radius:30px;
+
+    padding:40px;
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%, -50%);
+}
+
+.login-box h2{
+
+    text-align:center;
+
+    margin-bottom:40px;
+
+    font-size:20px;
+
+    font-weight:normal;
+}
+
+.campo{
+
+    margin-bottom:25px;
+}
+
+.campo label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    font-size:18px;
+}
+
+.campo input{
+
+    width:100%;
+
+    height:34px;
+
+    border:none;
+
+    background:#cfddee;
+
+    padding:10px;
+}
+
+/* BOTONES */
+
+.btn-acceder{
+
+    width:100%;
+
+    height:45px;
+
+    background:#1f4f82;
+
+    color:white;
+
+    border:none;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    margin-top:15px;
+}
+
+.btn-volver{
+
+    width:80%;
+
+    height:45px;
+
+    background:#f58b21;
+
+    color:black;
+
+    border:none;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    display:block;
+
+    margin:25px auto 0;
+}
+
+.acceso{
+
+    text-align:center;
+
+    margin-top:25px;
+
+    color:white;
+
+    font-size:18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="lateral">
+
+    <div class="logo-box">
+
+        <div class="logo">⌂</div>
+
+        <div class="nombre-sistema">
+            Sistema de<br>
+            reclamo
+        </div>
+
+    </div>
+
+    <div class="titulo-admin">
+        Gestión<br>
+        administrativa
+    </div>
+
+    <div class="texto-admin">
+        Solo personal administrativo
+    </div>
+
+</div>
+
+<div class="login-box">
+
+    <h2>Iniciar Sesión</h2>
+
+    <form>
+
+        <div class="campo">
+            <label>Usuario</label>
+            <input type="text">
+        </div>
+
+        <div class="campo">
+            <label>Contraseña</label>
+            <input type="password">
+        </div>
+
+        <button type="submit" class="btn-acceder">
+            Acceder
+        </button>
+
+        <button
+            type="button"
+            class="btn-volver"
+            onclick="history.back()">
+            Volver
+        </button>
+
+    </form>
+
+</div>
+
+<div class="acceso">
+    Acceso restringido
+</div>
+
+</body>
+</html>

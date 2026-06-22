@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Alta Usuarios</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#e8e8e8;
+}
+
+/* PANEL IZQUIERDO */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:300px;
+    height:100vh;
+    background:#214b78;
+    color:white;
+    text-align:center;
+}
+
+.logo{
+    margin-top:80px;
+    font-size:70px;
+}
+
+.sidebar h2{
+    margin-top:20px;
+    font-size:20px;
+}
+
+.sidebar h3{
+    margin-top:60px;
+    font-size:22px;
+    color:#9eb0c4;
+}
+
+/* CONTENIDO */
+
+.contenido{
+    margin-left:300px;
+    padding:40px 80px;
+}
+
+/* SALIR */
+
+.salir{
+    text-align:right;
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* TITULO */
+
+.titulo{
+    width:390px;
+    background:white;
+    padding:18px;
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    margin:0 auto 50px auto;
+}
+
+/* FORM */
+
+.formulario{
+    width:500px;
+    margin:auto;
+}
+
+label{
+    display:block;
+    margin-top:25px;
+    margin-bottom:8px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid black;
+    background:white;
+    font-size:16px;
+}
+
+textarea{
+    height:100px;
+    resize:none;
+}
+
+/* GUARDAR */
+
+.guardar{
+    text-align:center;
+    margin-top:20px;
+}
+
+.btn-guardar{
+    background:#c7dfbf;
+    border:none;
+    padding:15px 90px;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* BOTONES */
+
+.botones{
+    margin-top:35px;
+    display:flex;
+    justify-content:center;
+    gap:40px;
+}
+
+.btn{
+    padding:12px 30px;
+    border:none;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.alta{
+    background:#cfe7c7;
+}
+
+.modificar{
+    background:#e8be63;
+}
+
+.eliminar{
+    background:#e9a8a8;
+}
+
+.lista{
+    background:#c4cfdb;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="sidebar">
+
+    <div class="logo">🏠</div>
+
+    <h2>
+        Sistema de<br>
+        reclamo
+    </h2>
+
+    <h3>
+        Alta usuario
+    </h3>
+
+</div>
+
+<div class="contenido">
+
+    <div class="salir">
+        SALIR 🚪
+    </div>
+
+    <div class="titulo">
+        ALTA USUARIOS
+    </div>
+
+    <form class="formulario">
+
+        <label>Nombre y apellido</label>
+        <input type="text">
+
+        <label>Numero de documento</label>
+        <input type="text">
+
+        <label>Correo electrónico</label>
+        <input type="email">
+
+        <label>Rol de usuario</label>
+        <select>
+            <option>---Select---</option>
+            <option>Administrador</option>
+            <option>Operador</option>
+        </select>
+
+        <label>Observaciones</label>
+        <textarea></textarea>
+
+        <div class="guardar">
+            <button class="btn-guardar">
+                GUARDAR
+            </button>
+        </div>
+
+    </form>
+
+    <div class="botones">
+
+        <button class="btn alta">
+            ➕ Alta
+        </button>
+
+        <button class="btn modificar">
+            ✏️ Modificar
+        </button>
+
+        <button class="btn eliminar">
+            🗑 Eliminar
+        </button>
+
+        <button class="btn lista">
+            📋 Ver lista
+        </button>
+
+    </div>
+
+</div>
+
+</body>
+</html>

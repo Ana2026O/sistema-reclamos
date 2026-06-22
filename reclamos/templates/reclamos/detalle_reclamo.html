@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Reclamo</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+        }
+
+        .navbar{
+            background:#1f4a8a;
+            color:white;
+            padding:15px 25px;
+        }
+
+        .navbar h1{
+            font-size:22px;
+        }
+
+        .contenedor{
+            width:90%;
+            margin:20px auto;
+        }
+
+        .card{
+            background:white;
+            padding:25px;
+            border-radius:8px;
+            box-shadow:0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            color:#1f4a8a;
+            font-size:20px;
+            margin-bottom:20px;
+        }
+
+        h3{
+            color:#444;
+            font-size:16px;
+            margin-top:25px;
+            margin-bottom:10px;
+        }
+
+        .fila{
+            display:flex;
+            gap:30px;
+            margin-bottom:15px;
+        }
+
+        .campo{
+            flex:1;
+        }
+
+        .campo label{
+            font-size:13px;
+            font-weight:bold;
+            color:#555;
+        }
+
+        .campo p{
+            margin-top:5px;
+            font-size:14px;
+        }
+
+        .descripcion{
+            background:#f8f9fa;
+            border:1px solid #ddd;
+            padding:15px;
+            border-radius:5px;
+            margin-top:10px;
+        }
+
+        select,
+        textarea{
+            width:100%;
+            padding:8px;
+            border:1px solid #ccc;
+            border-radius:4px;
+            font-size:13px;
+        }
+
+        textarea{
+            resize:none;
+        }
+
+        .seguimiento{
+            background:#f8f9fa;
+            border-left:4px solid #1f4a8a;
+            padding:10px;
+            margin-bottom:10px;
+            font-size:13px;
+        }
+
+        .botones{
+            margin-top:25px;
+        }
+
+        .btn{
+            padding:8px 15px;
+            text-decoration:none;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            color:white;
+            font-size:13px;
+            margin-right:8px;
+        }
+
+        .guardar{
+            background:#1f4a8a;
+        }
+
+        .editar{
+            background:#ffc107;
+            color:black;
+        }
+
+        .eliminar{
+            background:#dc3545;
+        }
+
+        .volver{
+            background:#6c757d;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>Detalle del Reclamo</h1>
+    </div>
+
+    <div class="contenedor">
+
+        <div class="card">
+
+            <h2>Referencia: {{ reclamo.id }}</h2>
+
+            <h3>Datos del Solicitante</h3>
+
+            <div class="fila">
+
+                <div class="campo">
+                    <label>Nombre</label>
+                    <p>{{ reclamo.nombre }}</p>
+                </div>
+
+                <div class="campo">
+                    <label>Correo</label>
+                    <p>{{ reclamo.correo }}</p>
+                </div>
+
+            </div>
+
+            <div class="fila">
+
+                <div class="campo">
+                    <label>Teléfono</label>
+                    <p>{{ reclamo.telefono }}</p>
+                </div>
+
+                <div class="campo">
+                    <label>Categoría</label>
+                    <p>{{ reclamo.categoria }}</p>
+                </div>
+
+            </div>
+
+            <h3>Descripción del Reclamo</h3>
+
+            <div class="descripcion">
+                {{ reclamo.descripcion }}
+            </div>
+
+            <h3>Estado y Prioridad</h3>
+
+            <div class="fila">
+
+                <div class="campo">
+                    <label>Estado</label>
+                    <select>
+                        <option>Pendiente</option>
+                        <option>En Proceso</option>
+                        <option>Resuelto</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label>Prioridad</label>
+                    <select>
+                        <option>Baja</option>
+                        <option>Media</option>
+                        <option>Alta</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <h3>Observaciones</h3>
+
+            {% for seguimiento in seguimientos %}
+
+            <div class="seguimiento">
+                <strong>{{ seguimiento.fecha|date:"d/m/Y" }}</strong><br>
+                {{ seguimiento.comentario }}
+            </div>
+
+            {% empty %}
+
+            <div class="seguimiento">
+                No existen observaciones registradas.
+            </div>
+
+            {% endfor %}
+
+            <h3>Nueva Observación</h3>
+
+            <textarea rows="3"
+            placeholder="Ingrese una observación breve..."></textarea>
+
+            <div class="botones">
+
+                <button class="btn guardar">
+                    Guardar Cambios
+                </button>
+
+                <button class="btn editar">
+                    Editar
+                </button>
+
+                <button class="btn eliminar">
+                    Eliminar
+                </button>
+
+                <a href="{% url 'panel_control' %}"
+                   class="btn volver">
+                    Volver
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
