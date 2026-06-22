@@ -196,7 +196,10 @@
 
                     <td>{{ reclamo.id }}</td>
 
-                    <td>{{ reclamo.nombre }}</td>
+                        <td>
+                            {{ reclamo.usuario.first_name }}
+                            {{ reclamo.usuario.username }}
+                        </td>
 
                     <td>
                         {{ reclamo.estado }}
