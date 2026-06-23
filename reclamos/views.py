@@ -1,182 +1,78 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .forms import ReclamoForm
-from .models import Reclamo
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django import forms
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
-from django.contrib.auth import authenticate, login   # ✅ IMPORTANTE
-from django.shortcuts import render, redirect
+
+from .forms import ReclamoForm, UsuarioForm
+from .models import Reclamo
 
 
-
-
+# ---------------- INICIO ----------------
 def inicio(request):
     return render(request, 'reclamos/inicio.html')
 
 
-def registrar_reclamo(request):
-
-    if request.method == 'POST':
-
-        form = ReclamoForm(request.POST)
-
-        if form.is_valid():
-
-            print("FORMULARIO VALIDO")
-
-            reclamo = form.save(commit=False)
-
-            from django.contrib.auth.models import User
-            from .models import Estado, Prioridad
-
-            reclamo.usuario = User.objects.first()
-
-            reclamo.estado = Estado.objects.get(
-                nombre='Nuevo'
-            )
-
-            reclamo.prioridad = Prioridad.objects.get(
-                nombre='Media'
-            )
-
-            reclamo.save()
-
-            return redirect('confirmacion_reclamo', reclamo_id=reclamo.id)
-
-        else:
-
-            print("ERRORES DEL FORMULARIO:")
-            print(form.errors)
-
-    else:
-
-        form = ReclamoForm()
-
-    return render(
-        request,
-        'reclamos/registrar_reclamo.html',
-        {'form': form}
-    )
-
-
-def confirmacion_reclamo(request, reclamo_id):
-    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
-    return render(
-        request,
-        'reclamos/confirmacion_reclamo.html',
-        {'reclamo': reclamo}
-    )
-
-
-def consulta_reclamo(request):
-    return render(
-        request,
-        'reclamos/consulta_reclamo.html'
-    )
-
-
-def login_admin(request):
-    return render(
-        request,
-        'reclamos/login.html'
-    )
-
-
-def menu_admin(request):
-    return render(
-        request,
-        'reclamos/menu_admin.html'
-    )
-
-
-def alta_usuario(request):
-    return render(
-        request,
-        'reclamos/alta_usuario.html'
-    )
-
-
-def panel_control(request):
-
-    reclamos = Reclamo.objects.all()
-
-    context = {
-        'reclamos': reclamos,
-        'total': reclamos.count(),
-        'pendientes': reclamos.filter(estado__nombre='Pendiente').count(),
-        'proceso': reclamos.filter(estado__nombre='En Proceso').count(),
-        'resueltos': reclamos.filter(estado__nombre='Resuelto').count(),
-    }
-
-    return render(
-        request,
-        'reclamos/panel_control.html',
-        context
-    )
-
-
-# ✅ Vista corregida para detalle de reclamo
-def detalle_reclamo(request, reclamo_id):
-    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
-    return render(
-        request,
-        'reclamos/detalle_reclamo.html',
-        {'reclamo': reclamo}
-    )
-
-def inicio(request):
-    return render(request, 'reclamos/inicio.html')
-
+# ---------------- RECLAMOS ----------------
 def registrar_reclamo(request):
     if request.method == 'POST':
         form = ReclamoForm(request.POST)
         if form.is_valid():
             print("FORMULARIO VALIDO")
             reclamo = form.save(commit=False)
-
-            from django.contrib.auth.models import User
             from .models import Estado, Prioridad
-
             reclamo.usuario = User.objects.first()
             reclamo.estado = Estado.objects.get(nombre='Nuevo')
             reclamo.prioridad = Prioridad.objects.get(nombre='Media')
-
             reclamo.save()
             return redirect('confirmacion_reclamo', reclamo_id=reclamo.id)
         else:
-            print("ERRORES DEL FORMULARIO:")
-            print(form.errors)
+            print("ERRORES DEL FORMULARIO:", form.errors)
     else:
         form = ReclamoForm()
     return render(request, 'reclamos/registrar_reclamo.html', {'form': form})
+
 
 def confirmacion_reclamo(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
     return render(request, 'reclamos/confirmacion_reclamo.html', {'reclamo': reclamo})
 
+
 def consulta_reclamo(request):
     return render(request, 'reclamos/consulta_reclamo.html')
 
+
+# ---------------- LOGIN ADMIN ----------------
 def login_admin(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
         user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            login(request, user)
-            return redirect("menu_admin")   # redirige al menú
+        if user is None:
+            error_msg = "Usuario o contraseña inválidos."
+        elif not user.is_active:
+            error_msg = "Tu cuenta está deshabilitada."
         else:
-            return render(request, "reclamos/login.html", {"form": {"errors": True}})
+            login(request, user)
+            return redirect("menu_admin")
+
+        return render(request, "reclamos/login.html", {"error": error_msg})
+
     return render(request, "reclamos/login.html")
 
+
+
+
+# ---------------- MENÚ ADMIN ----------------
 def menu_admin(request):
     return render(request, 'reclamos/menu_admin.html')
 
-def alta_usuario(request):
-    return render(request, 'reclamos/alta_usuario.html')
 
+# ---------------- PANEL DE CONTROL ----------------
 def panel_control(request):
     reclamos = Reclamo.objects.all()
     context = {
@@ -188,11 +84,14 @@ def panel_control(request):
     }
     return render(request, 'reclamos/panel_control.html', context)
 
+
+# ---------------- DETALLE RECLAMO ----------------
 def detalle_reclamo(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
     return render(request, 'reclamos/detalle_reclamo.html', {'reclamo': reclamo})
 
-# ✅ Vista PDF
+
+# ---------------- DESCARGAR PDF ----------------
 def descargar_pdf(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
 
@@ -227,3 +126,31 @@ def descargar_pdf(request, reclamo_id):
     p.save()
 
     return response
+
+
+# ---------------- ALTA USUARIO ----------------
+def alta_usuario(request, pk=None):
+    if pk:
+        usuario = get_object_or_404(User, pk=pk)
+    else:
+        usuario = None
+
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            user = form.save(commit=False)
+            if not form.cleaned_data['password']:
+                return render(request, 'alta_usuario.html', {'form': form, 'error': 'La contraseña es obligatoria'})
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            return redirect('lista_usuarios')
+    else:
+        form = UsuarioForm(instance=usuario)
+
+    return render(request, 'alta_usuario.html', {'form': form})
+
+
+
+
+def reportes(request):
+    return render(request, 'reclamos/reportes.html')

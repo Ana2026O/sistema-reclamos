@@ -1,38 +1,18 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import Reclamo
-
 
 class ReclamoForm(forms.ModelForm):
     class Meta:
         model = Reclamo
-        fields = [
-            'nombre',
-            'correo',
-            'telefono',
-            'categoria',
-            'descripcion'
-        ]
+        fields = ['nombre', 'correo', 'telefono', 'categoria', 'descripcion']
 
         widgets = {
-            'nombre': forms.TextInput(
-                attrs={'class': 'form-control', 'required': True}
-            ),
-            'correo': forms.EmailInput(
-                attrs={'class': 'form-control', 'required': True}
-            ),
-            'telefono': forms.TextInput(
-                attrs={'class': 'form-control', 'required': True, 'pattern': '[0-9]+'}
-            ),
-            'categoria': forms.Select(
-                attrs={'class': 'form-control', 'required': True}
-            ),
-            'descripcion': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'rows': 4,
-                    'required': True
-                }
-            ),
+            'nombre': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+            'correo': forms.EmailInput(attrs={'class': 'form-control', 'required': True}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'pattern': '[0-9]+'}),
+            'categoria': forms.Select(attrs={'class': 'form-control', 'required': True}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'required': True}),
         }
 
     # Validaciones adicionales
@@ -56,7 +36,8 @@ class ReclamoForm(forms.ModelForm):
         widget=forms.Textarea,
         error_messages={'required': 'Debe ingresar una descripción.'}
     )
-     # Validación personalizada para nombre
+
+    # Validación personalizada para nombre
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
         if not nombre.replace(" ", "").isalpha():
@@ -67,8 +48,14 @@ class ReclamoForm(forms.ModelForm):
 class ConsultaReclamoForm(forms.Form):
     numero_reclamo = forms.IntegerField(
         label="Número de Reclamo",
-        widget=forms.NumberInput(
-            attrs={'class': 'form-control'}
-        ),
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
         error_messages={'invalid': 'Ingrese solo números en el número de reclamo.'}
     )
+
+
+class UsuarioForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']

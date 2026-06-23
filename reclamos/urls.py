@@ -15,11 +15,16 @@ urlpatterns = [
 
     path('menu-admin/', views.menu_admin, name='menu_admin'),
 
-    path('alta-usuario/', views.alta_usuario, name='alta_usuario'),
+   #path('alta-usuario/', views.alta_usuario, name='alta_usuario'),
 
-    path('panel/', views.panel_control, name='panel_control'),
+  # path('panel/', views.panel_control, name='panel_control'),
 
     path('detalle/<int:reclamo_id>/', views.detalle_reclamo, name='detalle_reclamo'),
 
-    path('pdf/<int:reclamo_id>/', views.descargar_pdf, name='descargar_pdf'),  # ✅ nueva ruta
+    path('pdf/<int:reclamo_id>/', views.descargar_pdf, name='descargar_pdf'),  
+
+
+    path('alta_usuario/', views.alta_usuario, name='alta_usuario'),
+    path('panel_control/', views.panel_control, name='panel_control'),
+    path('reportes/', views.reportes, name='reportes'),
 ]

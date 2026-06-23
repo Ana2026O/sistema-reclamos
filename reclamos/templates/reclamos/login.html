@@ -52,7 +52,7 @@ body{
 
     height:220px;
 
-    background:#cfe0eb;
+    
 
     display:flex;
 
@@ -112,7 +112,7 @@ body{
 
     position:absolute;
 
-    left:50%;
+    left:60%;
     top:50%;
 
     transform:translate(-50%, -50%);
@@ -202,11 +202,14 @@ body{
 
     text-align:center;
 
-    margin-top:25px;
+    margin-top:5px;
 
     color:white;
 
     font-size:18px;
+
+    
+
 }
 
 </style>
@@ -229,7 +232,7 @@ body{
 
     <div class="titulo-admin">
         Gestión<br>
-        administrativa
+        ABM
     </div>
 
     <div class="texto-admin">
@@ -266,11 +269,10 @@ body{
     </button>
 </form>
 
-{% if form.errors %}
-    <p style="color:red; text-align:center;">
-        Usuario o contraseña incorrectos
-    </p>
+    {% if error %}
+  <p style="color:red; text-align:center;">{{ error }}</p>
 {% endif %}
+
 
 </div>
 

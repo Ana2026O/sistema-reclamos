@@ -72,46 +72,36 @@ body{
 /* PANEL CENTRAL */
 
 .menu{
-
-    margin-left:350px;
-
+    margin-left:350px;   /* mantiene espacio para el panel lateral */
     height:100vh;
-
     display:flex;
-
     flex-direction:column;
-
     justify-content:center;
-
-    align-items:center;
-
-    gap:90px;
+    align-items:flex-start; /* alinea los botones al inicio en vez de al centro */
+    gap:40px;              /* menos separación para que no queden tan lejos */
+    padding-left:60px;     /* agrega un poco de espacio desde el lateral */
 }
 
 .boton{
-
-    width:380px;
-
-    height:60px;
-
+    width:300px;   /* más angosto para que no se vean tan grandes */
+    height:55px;
     border:none;
-
-    border-radius:20px;
-
+    border-radius:100px;
     background:#e4e4e4;
-
-    font-size:22px;
-
+    font-size:20px;
     cursor:pointer;
 }
+
+
+
 
 .salir{
 
     position:absolute;
 
-    right:250px;
+    right:100px;
 
-    bottom:120px;
+    bottom: 10px;
 
     width:140px;
 
@@ -119,7 +109,7 @@ body{
 
     border:none;
 
-    border-radius:20px;
+    border-radius:100px;
 
     background:#f7941d;
 
@@ -128,6 +118,9 @@ body{
     font-size:20px;
 
     cursor:pointer;
+    
+    
+    
 }
 
 </style>
@@ -155,23 +148,35 @@ body{
 
 <div class="menu">
 
-    <button class="boton">
+    <button class="boton" onclick="window.location.href='{% url 'alta_usuario' %}'">
         Alta usuarios
     </button>
 
-    <button class="boton">
-        Gestión de reclamos
+    <button class="boton" onclick="window.location.href='{% url 'panel_control' %}'">
+        Gestión ABM
     </button>
 
-    <button class="boton">
-        Reportes y estadísticas
-    </button>
+
+    
+     <button class="boton" onclick="window.location.href='{% url 'reportes' %}'">
+      Reportes y estadísticas#
+   </button>
+   
+
 
 </div>
 
-<button class="salir">
-    Salir
+<button class="salir" onclick="window.location.href='{% url 'inicio' %}'">
+    SALIR
 </button>
+
+
+
+    
+
+</div>
+
+
 
 </body>
 </html>
