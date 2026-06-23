@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('login/', views.login_admin, name='login_admin'),
 
+
     path('menu-admin/', views.menu_admin, name='menu_admin'),
 
     path('alta-usuario/', views.alta_usuario, name='alta_usuario'),

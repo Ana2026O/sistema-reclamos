@@ -5,43 +5,10 @@ from .models import Reclamo
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
+from django.contrib.auth import authenticate, login   # ✅ IMPORTANTE
+from django.shortcuts import render, redirect
 
 
-
-def descargar_pdf(request, reclamo_id):
-    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="reclamo_{reclamo.id}.pdf"'
-
-    p = canvas.Canvas(response, pagesize=A4)
-    width, height = A4
-
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(2*cm, height - 2*cm, "Sistema de Reclamos - Confirmación")
-    p.line(2*cm, height - 2.2*cm, width - 2*cm, height - 2.2*cm)
-
-    p.setFont("Helvetica", 12)
-    p.drawString(2*cm, height - 3*cm, f"Reclamo N°: {reclamo.id}")
-    p.drawString(2*cm, height - 4*cm, f"Fecha: {reclamo.fecha_creacion.strftime('%d/%m/%Y %H:%M')}")
-    p.drawString(2*cm, height - 5*cm, f"Categoría: {reclamo.categoria}")
-    p.drawString(2*cm, height - 6*cm, f"Estado: {reclamo.estado}")
-    p.drawString(2*cm, height - 7*cm, f"Prioridad: {reclamo.prioridad}")
-
-    p.setFont("Helvetica", 12)
-    p.drawString(2*cm, height - 8*cm, "Descripción:")
-    text_obj = p.beginText(2*cm, height - 9*cm)
-    text_obj.setFont("Helvetica", 11)
-    text_obj.textLines(reclamo.descripcion)
-    p.drawText(text_obj)
-
-    p.setFont("Helvetica-Oblique", 10)
-    p.drawString(2*cm, 2*cm, "Este documento fue generado automáticamente por el sistema de reclamos.")
-
-    p.showPage()
-    p.save()
-
-    return response
 
 
 def inicio(request):
@@ -192,7 +159,17 @@ def consulta_reclamo(request):
     return render(request, 'reclamos/consulta_reclamo.html')
 
 def login_admin(request):
-    return render(request, 'reclamos/login.html')
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect("menu_admin")   # redirige al menú
+        else:
+            return render(request, "reclamos/login.html", {"form": {"errors": True}})
+    return render(request, "reclamos/login.html")
 
 def menu_admin(request):
     return render(request, 'reclamos/menu_admin.html')

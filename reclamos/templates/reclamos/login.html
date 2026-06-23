@@ -242,30 +242,35 @@ body{
 
     <h2>Iniciar Sesión</h2>
 
-    <form>
+   
+<form method="post" action="{% url 'login_admin' %}">
 
-        <div class="campo">
-            <label>Usuario</label>
-            <input type="text">
-        </div>
+    {% csrf_token %}
 
-        <div class="campo">
-            <label>Contraseña</label>
-            <input type="password">
-        </div>
+    <div class="campo">
+        <label for="id_username">Usuario</label>
+        <input type="text" name="username" id="id_username" required>
+    </div>
 
-        <button type="submit" class="btn-acceder">
-            Acceder
-        </button>
+    <div class="campo">
+        <label for="id_password">Contraseña</label>
+        <input type="password" name="password" id="id_password" required>
+    </div>
 
-        <button
-            type="button"
-            class="btn-volver"
-            onclick="history.back()">
-            Volver
-        </button>
+    <button type="submit" class="btn-acceder">
+        Acceder
+    </button>
 
-    </form>
+    <button type="button" class="btn-volver" onclick="history.back()">
+        Volver
+    </button>
+</form>
+
+{% if form.errors %}
+    <p style="color:red; text-align:center;">
+        Usuario o contraseña incorrectos
+    </p>
+{% endif %}
 
 </div>
 
