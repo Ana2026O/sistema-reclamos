@@ -183,26 +183,16 @@ textarea{
         ALTA USUARIOS
     </div>
 
-    <form class="formulario">
+   <form class="formulario" method="post">
+    {% csrf_token %}
+    
 
-        <label>Nombre y apellido</label>
-        <input type="text">
+{{ form.as_p }} 
 
-        <label>Numero de documento</label>
-        <input type="text">
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
 
-        <label>Correo electrónico</label>
-        <input type="email">
-
-        <label>Rol de usuario</label>
-        <select>
-            <option>---Select---</option>
-            <option>Administrador</option>
-            <option>Operador</option>
-        </select>
-
-        <label>Observaciones</label>
-        <textarea></textarea>
 
         <div class="guardar">
             <button class="btn-guardar">

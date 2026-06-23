@@ -129,6 +129,8 @@ def descargar_pdf(request, reclamo_id):
 
 
 # ---------------- ALTA USUARIO ----------------
+
+
 def alta_usuario(request, pk=None):
     if pk:
         usuario = get_object_or_404(User, pk=pk)
@@ -140,14 +142,18 @@ def alta_usuario(request, pk=None):
         if form.is_valid():
             user = form.save(commit=False)
             if not form.cleaned_data['password']:
-                return render(request, 'alta_usuario.html', {'form': form, 'error': 'La contraseña es obligatoria'})
+                return render(request, 'reclamos/alta_usuario.html', {
+                    'form': form,
+                    'error': 'La contraseña es obligatoria'
+                })
             user.set_password(form.cleaned_data['password'])
             user.save()
-            return redirect('lista_usuarios')
+            return redirect('login_admin')   # ✅ después de crear, vuelve al login
     else:
         form = UsuarioForm(instance=usuario)
 
-    return render(request, 'alta_usuario.html', {'form': form})
+    return render(request, 'reclamos/alta_usuario.html', {'form': form})
+
 
 
 

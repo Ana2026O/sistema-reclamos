@@ -15,9 +15,7 @@ urlpatterns = [
 
     path('menu-admin/', views.menu_admin, name='menu_admin'),
 
-   #path('alta-usuario/', views.alta_usuario, name='alta_usuario'),
-
-  # path('panel/', views.panel_control, name='panel_control'),
+   
 
     path('detalle/<int:reclamo_id>/', views.detalle_reclamo, name='detalle_reclamo'),
 
