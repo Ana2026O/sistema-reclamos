@@ -15,6 +15,9 @@ from .forms import UsuarioForm
 
 from .models import Estado, Prioridad
 
+from .models import Estado, Prioridad, Seguimiento   
+
+
 # ---------------- INICIO ----------------
 def inicio(request):
     return render(request, 'reclamos/inicio.html')
@@ -90,12 +93,27 @@ def panel_control(request):
 
 
 # ------------ DETALLE RECLAMO ----------------
+
 def detalle_reclamo(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
+    seguimientos = reclamo.seguimiento_set.all().order_by("-fecha")   # ✅ obtener seguimientos
 
     if request.method == "POST":
-        reclamo.estado = Estado.objects.get(id=request.POST.get("estado"))
-        reclamo.prioridad = Prioridad.objects.get(id=request.POST.get("prioridad"))
+        # Si viene un comentario nuevo
+        comentario = request.POST.get("comentario")
+        if comentario:
+            Seguimiento.objects.create(
+                reclamo=reclamo,
+                usuario=request.user,   # el operador logueado
+                comentario=comentario
+            )
+            return redirect("detalle_reclamo", reclamo_id=reclamo.id)
+
+        # Si se cambian estado/prioridad
+        if request.POST.get("estado"):
+            reclamo.estado = Estado.objects.get(id=request.POST.get("estado"))
+        if request.POST.get("prioridad"):
+            reclamo.prioridad = Prioridad.objects.get(id=request.POST.get("prioridad"))
         reclamo.save()
         return redirect("panel_control")
 
@@ -104,9 +122,11 @@ def detalle_reclamo(request, reclamo_id):
     return render(request, 'reclamos/detalle_reclamo.html', {
         'reclamo': reclamo,
         'estados': estados,
-        'prioridades': prioridades
+        'prioridades': prioridades,
+        'seguimientos': seguimientos   # ✅ pasar seguimientos al template
     })
 
+    
 
 
 # ---------------- DESCARGAR PDF ----------------

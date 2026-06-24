@@ -88,16 +88,23 @@
     font-size:13px;
 }
 
-textarea{
-    width:80%;          /* más chico que 100% */
+textarea {
+    width:70%;          /* más angosto */
     padding:8px;
     border:1px solid #ccc;
     border-radius:4px;
     font-size:13px;
     resize:none;
-    float:left;         /* se pega a la izquierda */
-    margin-left:0;      /* aseguramos que no quede corrido */
+    display:inline-block; /* se comporta como bloque en línea */
+    vertical-align:top;   /* se alinea arriba */
 }
+
+button.guardar {
+    display:inline-block; /* queda al lado del textarea */
+    margin-left:10px;     /* espacio entre textarea y botón */
+    vertical-align:top;   /* alinea arriba */
+}
+
 
 
 
@@ -141,6 +148,8 @@ textarea{
         .volver{
             background:#6c757d;
         }
+
+        
 
     </style>
 </head>
@@ -227,6 +236,27 @@ textarea{
 
     </div>
     </form>
+    
+            <h3>Observaciones</h3>
+
+<!-- Formulario para agregar observación -->
+<form method="post" action="{% url 'detalle_reclamo' reclamo.id %}">
+    {% csrf_token %}
+    <textarea name="comentario" rows="3" placeholder="Escribe tu observación aquí..."></textarea>
+    <button type="submit" class="btn guardar">Agregar Observación</button>
+</form>
+
+<!-- Lista de observaciones -->
+{% for seguimiento in seguimientos %}
+    <div class="seguimiento">
+        <strong>{{ seguimiento.fecha|date:"d/m/Y H:i" }}</strong> - {{ seguimiento.usuario }}
+        <br>
+        {{ seguimiento.comentario }}
+    </div>
+{% empty %}
+    <p>No existen observaciones registradas.</p>
+{% endfor %}
+
         
     
 <div class="botones">
@@ -255,29 +285,6 @@ textarea{
 
 
             </div>
-
-            <h3>Observaciones</h3>
-
-            {% for seguimiento in seguimientos %}
-
-            <div class="seguimiento">
-                <strong>{{ seguimiento.fecha|date:"d/m/Y" }}</strong><br>
-                {{ seguimiento.comentario }}
-            </div>
-
-            {% empty %}
-
-            <div class="seguimiento">
-                No existen observaciones registradas.
-            </div>
-
-            {% endfor %}
-
-     
-
-
-               
-
 
             
 
