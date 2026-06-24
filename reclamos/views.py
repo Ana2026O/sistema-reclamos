@@ -10,6 +10,8 @@ from reportlab.lib.units import cm
 from .forms import ReclamoForm, UsuarioForm
 from .models import Reclamo
 
+from django.contrib.auth.models import User
+from .forms import UsuarioForm
 
 # ---------------- INICIO ----------------
 def inicio(request):
@@ -160,3 +162,4 @@ def alta_usuario(request, pk=None):
 
 def reportes(request):
     return render(request, 'reclamos/reportes.html')
+

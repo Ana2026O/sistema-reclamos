@@ -34,6 +34,8 @@
             margin-top:3px;
         }
 
+
+        
         .contenedor{
             padding:25px;
         }
@@ -131,16 +133,54 @@
         .ver{
             background:#1f4a8a;
         }
+        .acciones{
+    position:absolute;
+    top:15px;
+    right:25px;   /* antes decía left */
+    display:flex;
+    gap:10px;
+
+.btn-nav{
+    text-decoration:none;
+    color:white;      /* texto blanco */
+    background:#163a6b;
+    padding:8px 14px;
+    border-radius:5px;
+    font-size:14px;
+    font-weight:bold;
+}
+.btn-nav:hover{
+    background:white;
+    color:#1f4a8a;
+    border:1px solid white;
+    transition:0.3s;
+}
+
+.salir:hover{
+    background:white;
+    color:#dc3545;
+    border:1px solid white;
+}
+
+}
 
     </style>
 </head>
 
 <body>
 
-    <div class="navbar">
-        <h1>SISTEMA DE GESTIÓN DE RECLAMOS</h1>
-        <p>Panel Administrativo</p>
-    </div>
+  <div class="navbar">
+
+<div class="acciones">
+    <a href="{% url 'inicio' %}" class="btn-nav">🏠 Inicio</a>
+    <a href="{% url 'login_admin' %}" class="btn-nav salir">🚪 Salir</a>
+</div>
+
+    <h1>SISTEMA DE GESTIÓN DE RECLAMOS</h1>
+    <p>Panel Administrativo</p>
+
+</div>
+
 
     <div class="contenedor">
 

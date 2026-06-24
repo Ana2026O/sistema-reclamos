@@ -2,54 +2,29 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Lista de Usuarios</title>
-
+<title>Listado de Usuarios</title>
 <style>
-body{
-    background:#e8e8e8;
-    font-family:Arial, sans-serif;
-}
-.contenido{
-    margin:40px;
-}
-.titulo{
-    width:390px;
-    background:white;
-    padding:18px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    margin:0 auto 30px auto;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-    background:white;
-}
-th, td{
-    border:1px solid #000;
-    padding:10px;
-    text-align:center;
-}
-th{
-    background:#214b78;
-    color:white;
-}
-.acciones a{
-    margin:0 5px;
-    text-decoration:none;
-    font-weight:bold;
-}
-.editar{ color:#e8be63; }
-.eliminar{ color:#e9a8a8; }
-.alta{ color:#2d7a2d; }
+body { background:#f4f4f4; font-family:Arial, sans-serif; }
+.contenido { margin:40px; }
+.titulo { font-size:24px; font-weight:bold; margin-bottom:20px; text-align:center; }
+table { width:100%; border-collapse:collapse; background:white; }
+th, td { border:1px solid #ccc; padding:10px; text-align:center; }
+th { background:#214b78; color:white; }
+.acciones a { margin:0 5px; text-decoration:none; font-weight:bold; }
+.editar { color:#e8be63; }
+.eliminar { color:#e57373; }
+.nuevo { display:inline-block; margin-bottom:20px; padding:10px 15px; background:#214b78; color:white; text-decoration:none; border-radius:5px; }
 </style>
 </head>
 <body>
 
 <div class="contenido">
-    <div class="titulo">Usuarios registrados</div>
+    <div class="titulo">Listado de Usuarios</div>
 
+    <!-- Botón para ir al formulario de alta -->
+    <a href="{% url 'alta_usuario' %}" class="nuevo">+ Nuevo Usuario</a>
+
+    <!-- Tabla de usuarios -->
     <table>
         <tr>
             <th>ID</th>
@@ -67,16 +42,17 @@ th{
             <td>{{ usuario.last_name }}</td>
             <td>{{ usuario.email }}</td>
             <td class="acciones">
-                <a href="{% url 'alta_usuario' usuario.id %}" class="editar">✏️ Editar</a>
-                <a href="{% url 'eliminar_usuario' usuario.id %}" class="eliminar">🗑 Eliminar</a>
+                <a href="{% url 'editar_usuario' usuario.id %}" class="editar">✏️ Editar</a>
+                <a href="{% url 'eliminar_usuario' usuario.id %}" class="eliminar"
+                   onclick="return confirm('¿Seguro que querés eliminar este usuario?');">🗑 Eliminar</a>
             </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No hay usuarios registrados.</td>
         </tr>
         {% endfor %}
     </table>
-
-    <div style="margin-top:20px; text-align:center;">
-        <a href="{% url 'alta_usuario' %}" class="alta">➕ Alta nuevo usuario</a>
-    </div>
 </div>
 
 </body>
