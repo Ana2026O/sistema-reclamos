@@ -231,30 +231,106 @@
             <textarea rows="3"
             placeholder="Ingrese una observación breve..."></textarea>
 
-            <div class="botones">
+            
 
-                <button class="btn guardar">
-                    Guardar Cambios
-                </button>
+                 <div class="botones">
+                <button class="btn guardar" onclick="popupGuardar(true)">Guardar Cambios</button>
+                <button class="btn editar" onclick="popupEditar(true)">Editar</button>
+                <button class="btn eliminar" onclick="popupEliminar(false)">Eliminar</button>
+                 <a href="{% url 'panel_control' %}" class="btn volver" onclick="popupVolver()">Volver</a>
+                </div>
 
-                <button class="btn editar">
-                    Editar
-                </button>
 
-                <button class="btn eliminar">
-                    Eliminar
-                </button>
 
-                <a href="{% url 'panel_control' %}"
-                   class="btn volver">
-                    Volver
-                </a>
+               
 
-            </div>
+
+            
 
         </div>
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+
+<script>
+    function popupGuardar(exito){
+        if(exito){
+            Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: 'Reclamo guardado correctamente ✅',
+                confirmButtonColor: '#1f4a8a'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo guardar el reclamo ❌',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    }
+
+    function popupEditar(exito){
+        if(exito){
+            Swal.fire({
+                icon: 'success',
+                title: 'Editado',
+                text: 'Reclamo editado correctamente ✏️',
+                confirmButtonColor: '#1f4a8a'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo editar el reclamo ❌',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    }
+
+    function popupEliminar(exito){
+        if(exito){
+            Swal.fire({
+                icon: 'success',
+                title: 'Eliminado',
+                text: 'Reclamo eliminado correctamente 🗑️',
+                confirmButtonColor: '#1f4a8a'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo eliminar el reclamo ❌',
+                confirmButtonColor: '#dc3545'
+            });
+        }
+    }
+
+    function popupVolver(){
+        Swal.fire({
+            icon: 'info',
+            title: 'Volviendo',
+            text: 'Regresando al Panel de Control ↩️',
+            confirmButtonColor: '#6c757d'
+        });
+    }
+</script>
+
+
+
+
+
+
+
 </body>
+
+
+
+
+
+
+
 </html>
