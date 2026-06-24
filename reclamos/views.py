@@ -13,6 +13,8 @@ from .models import Reclamo
 from django.contrib.auth.models import User
 from .forms import UsuarioForm
 
+from .models import Estado, Prioridad
+
 # ---------------- INICIO ----------------
 def inicio(request):
     return render(request, 'reclamos/inicio.html')
@@ -87,10 +89,24 @@ def panel_control(request):
     return render(request, 'reclamos/panel_control.html', context)
 
 
-# ---------------- DETALLE RECLAMO ----------------
+# ------------ DETALLE RECLAMO ----------------
 def detalle_reclamo(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
-    return render(request, 'reclamos/detalle_reclamo.html', {'reclamo': reclamo})
+
+    if request.method == "POST":
+        reclamo.estado = Estado.objects.get(id=request.POST.get("estado"))
+        reclamo.prioridad = Prioridad.objects.get(id=request.POST.get("prioridad"))
+        reclamo.save()
+        return redirect("panel_control")
+
+    estados = Estado.objects.all()
+    prioridades = Prioridad.objects.all()
+    return render(request, 'reclamos/detalle_reclamo.html', {
+        'reclamo': reclamo,
+        'estados': estados,
+        'prioridades': prioridades
+    })
+
 
 
 # ---------------- DESCARGAR PDF ----------------
@@ -115,6 +131,7 @@ def descargar_pdf(request, reclamo_id):
     p.drawString(2*cm, height - 7*cm, f"Prioridad: {reclamo.prioridad}")
 
     p.setFont("Helvetica", 12)
+
     p.drawString(2*cm, height - 8*cm, "Descripción:")
     text_obj = p.beginText(2*cm, height - 9*cm)
     text_obj.setFont("Helvetica", 11)
@@ -163,3 +180,21 @@ def alta_usuario(request, pk=None):
 def reportes(request):
     return render(request, 'reclamos/reportes.html')
 
+# ---------------- ELIMINAR RECLAMO ----------------
+def eliminar_reclamo(request, reclamo_id):
+    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
+    reclamo.delete()
+    return redirect('panel_control')
+
+# ---------------- EDITAR RECLAMO ----------------
+def editar_reclamo(request, reclamo_id):
+    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
+    if request.method == 'POST':
+        form = ReclamoForm(request.POST, instance=reclamo)
+        if form.is_valid():
+            form.save()   # ✅ guarda los cambios
+            return redirect('panel_control')
+    else:
+        form = ReclamoForm(instance=reclamo)
+    return render(request, 'reclamos/editar_reclamo.html', {'form': form, 'reclamo': reclamo})
+#---------------------------------

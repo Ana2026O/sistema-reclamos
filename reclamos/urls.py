@@ -25,4 +25,12 @@ urlpatterns = [
     path('alta_usuario/', views.alta_usuario, name='alta_usuario'),
     path('panel_control/', views.panel_control, name='panel_control'),
     path('reportes/', views.reportes, name='reportes'),
+    
+    
+    
+    path('eliminar/<int:reclamo_id>/', views.eliminar_reclamo, name='eliminar_reclamo'),
+    path('editar/<int:reclamo_id>/', views.editar_reclamo, name='editar_reclamo'),
+
+
+
 ]

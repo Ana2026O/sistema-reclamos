@@ -174,6 +174,11 @@
 <div class="acciones">
     <a href="{% url 'inicio' %}" class="btn-nav">🏠 Inicio</a>
     <a href="{% url 'login_admin' %}" class="btn-nav salir">🚪 Salir</a>
+
+ 
+    
+
+    
 </div>
 
     <h1>SISTEMA DE GESTIÓN DE RECLAMOS</h1>
@@ -229,55 +234,34 @@
                 </tr>
             </thead>
 
+
             <tbody>
+    {% for reclamo in reclamos %}
+    <tr>
+        <td>{{ reclamo.id }}</td>
+        <td>{{ reclamo.nombre }}</td>
+        <td>{{ reclamo.estado }}</td>
+        <td>{{ reclamo.prioridad }}</td>
+        <td>{{ reclamo.fecha_creacion|date:"d/m/Y" }}</td>
+        <td>
+            {% if reclamo.id %}
+                <a href="{% url 'detalle_reclamo' reclamo.id %}" class="btn ver">Ver</a>
+                <a href="{% url 'editar_reclamo' reclamo.id %}" class="btn editar">Editar</a>
+                <a href="{% url 'eliminar_reclamo' reclamo.id %}" class="btn eliminar"
+                   onclick="return confirm('¿Seguro que deseas eliminar este reclamo?');">Eliminar</a>
+            {% else %}
+                <span class="btn disabled">Sin ID</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="6">No existen reclamos registrados.</td>
+    </tr>
+    {% endfor %}
+</tbody>
 
-                {% for reclamo in reclamos %}
-                <tr>
-
-                    <td>{{ reclamo.id }}</td>
-
-                        <td>
-                            {{ reclamo.usuario.first_name }}
-                            {{ reclamo.usuario.username }}
-                        </td>
-
-                    <td>
-                        {{ reclamo.estado }}
-                    </td>
-
-                    <td>
-                        {{ reclamo.prioridad }}
-                    </td>
-
-                    <td>
-                        {{ reclamo.fecha_creacion|date:"d/m/Y" }}
-                    </td>
-
-
-
-                    <td>
-                        <a href="{% url 'detalle_reclamo' reclamo.id %}" class="btn ver">
-                          Ver
-                             </a>
-                        </td>
-
-
-
-                    
-
-                </tr>
-                {% empty %}
-
-                <tr>
-                    <td colspan="6">
-                        No existen reclamos registrados.
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
+            
         </table>
 
     </div>

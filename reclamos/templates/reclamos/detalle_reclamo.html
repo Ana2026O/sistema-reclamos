@@ -155,7 +155,7 @@
 
                 <div class="campo">
                     <label>Nombre</label>
-                    <p>{{ reclamo.usuario.username }}</p>
+                    <p>{{ reclamo.nombre }}</p>
                 </div>
 
                 <div class="campo">
@@ -190,22 +190,57 @@
             <div class="fila">
 
                 <div class="campo">
-                    <label>Estado</label>
-                    <select>
-                        <option>Pendiente</option>
-                        <option>En Proceso</option>
-                        <option>Resuelto</option>
-                    </select>
-                </div>
+                
+                 <form method="post">
+    {% csrf_token %}
+    <label>Estado</label>
+    <select name="estado">
+        {% for e in estados %}
+            <option value="{{ e.id }}" {% if reclamo.estado.id == e.id %}selected{% endif %}>
+                {{ e.nombre }}
+            </option>
+        {% endfor %}
+    </select>
 
-                <div class="campo">
-                    <label>Prioridad</label>
-                    <select>
-                        <option>Baja</option>
-                        <option>Media</option>
-                        <option>Alta</option>
-                    </select>
-                </div>
+    <label>Prioridad</label>
+    <select name="prioridad">
+        {% for p in prioridades %}
+            <option value="{{ p.id }}" {% if reclamo.prioridad.id == p.id %}selected{% endif %}>
+                {{ p.nombre }}
+            </option>
+        {% endfor %}
+    </select>
+
+
+<div class="botones">
+        <button type="submit" class="btn guardar" onclick="guardarConPopup(event, '{{ reclamo.id }}')">Guardar Cambios</button>
+
+
+        <a href="{% url 'editar_reclamo' reclamo.id %}" class="btn editar" onclick="popupEditar(true)">Editar</a>
+        <form method="post" action="{% url 'eliminar_reclamo' reclamo.id %}" style="display:inline;">
+            {% csrf_token %}
+
+
+
+          <button type="submit" class="btn eliminar" onclick="eliminarConPopup(event, '{{ reclamo.id }}', '{{ reclamo.categoria }}')">Eliminar</button>
+
+
+        </form>
+        <a href="{% url 'panel_control' %}" class="btn volver" onclick="volverConPopup(event, this.href)">Volver</a>
+
+
+
+
+
+
+    </div>
+
+
+
+</form>
+
+
+
 
             </div>
 
@@ -226,20 +261,7 @@
 
             {% endfor %}
 
-            <h3>Nueva Observación</h3>
-
-            <textarea rows="3"
-            placeholder="Ingrese una observación breve..."></textarea>
-
-            
-
-                 <div class="botones">
-                <button class="btn guardar" onclick="popupGuardar(true)">Guardar Cambios</button>
-                <button class="btn editar" onclick="popupEditar(true)">Editar</button>
-                <button class="btn eliminar" onclick="popupEliminar(false)">Eliminar</button>
-                 <a href="{% url 'panel_control' %}" class="btn volver" onclick="popupVolver()">Volver</a>
-                </div>
-
+     
 
 
                
@@ -247,7 +269,7 @@
 
             
 
-        </div>
+        
 
     </div>
 
@@ -255,69 +277,51 @@
     
 
 <script>
-    function popupGuardar(exito){
-        if(exito){
-            Swal.fire({
-                icon: 'success',
-                title: 'Guardado',
-                text: 'Reclamo guardado correctamente ✅',
-                confirmButtonColor: '#1f4a8a'
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo guardar el reclamo ❌',
-                confirmButtonColor: '#dc3545'
-            });
-        }
-    }
+    function guardarConPopup(event, id){
+    event.preventDefault();
+    Swal.fire({
+        icon: 'success',
+        title: 'Guardado',
+        text: `El reclamo #${id} fue guardado correctamente ✅`,
+        confirmButtonColor: '#1f4a8a'
+    }).then(() => {
+        event.target.closest("form").submit();
+    });
+}
 
-    function popupEditar(exito){
-        if(exito){
-            Swal.fire({
-                icon: 'success',
-                title: 'Editado',
-                text: 'Reclamo editado correctamente ✏️',
-                confirmButtonColor: '#1f4a8a'
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo editar el reclamo ❌',
-                confirmButtonColor: '#dc3545'
-            });
-        }
-    }
 
-    function popupEliminar(exito){
-        if(exito){
-            Swal.fire({
-                icon: 'success',
-                title: 'Eliminado',
-                text: 'Reclamo eliminado correctamente 🗑️',
-                confirmButtonColor: '#1f4a8a'
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo eliminar el reclamo ❌',
-                confirmButtonColor: '#dc3545'
-            });
+   function eliminarConPopup(event, id, categoria){
+    event.preventDefault();
+    Swal.fire({
+        icon: 'warning',
+        title: '¿Eliminar reclamo?',
+        text: `¿Seguro que quieres eliminar el reclamo #${id} de la categoría ${categoria}?`,
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar'
+    }).then((result) => {
+        if(result.isConfirmed){
+            event.target.closest("form").submit();
         }
-    }
+    });
+}
 
-    function popupVolver(){
+    
+
+    function volverConPopup(event, url){
+        event.preventDefault();
         Swal.fire({
             icon: 'info',
             title: 'Volviendo',
             text: 'Regresando al Panel de Control ↩️',
             confirmButtonColor: '#6c757d'
+        }).then(() => {
+            window.location.href = url;
         });
     }
 </script>
+
 
 
 

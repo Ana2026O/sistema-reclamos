@@ -130,8 +130,9 @@ textarea{ height:60px; resize:none; }
 
 <div class="titulo-form">Ingrese su reclamo aquí</div>
 
-<form method="post" class="formulario">
+<form method="post" action="{% url 'registrar_reclamo' %}" class="formulario">
     {% csrf_token %}
+
 
     <div class="fila">
         <div class="campo">
