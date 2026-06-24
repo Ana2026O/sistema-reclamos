@@ -183,8 +183,11 @@ def reportes(request):
 # ---------------- ELIMINAR RECLAMO ----------------
 def eliminar_reclamo(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
-    reclamo.delete()
-    return redirect('panel_control')
+    if request.method == "POST":   # ✅ solo elimina con POST
+        reclamo.delete()
+        return redirect('panel_control')
+    return redirect('detalle_reclamo', reclamo_id=reclamo_id)
+
 
 # ---------------- EDITAR RECLAMO ----------------
 def editar_reclamo(request, reclamo_id):

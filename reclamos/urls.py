@@ -28,8 +28,10 @@ urlpatterns = [
     
     
     
-    path('eliminar/<int:reclamo_id>/', views.eliminar_reclamo, name='eliminar_reclamo'),
-    path('editar/<int:reclamo_id>/', views.editar_reclamo, name='editar_reclamo'),
+path('reclamos/eliminar/<int:reclamo_id>/', views.eliminar_reclamo, name='eliminar_reclamo'),
+path('reclamos/editar/<int:reclamo_id>/', views.editar_reclamo, name='editar_reclamo'),
+
+
 
 
 

@@ -82,18 +82,25 @@
             margin-top:10px;
         }
 
-        select,
-        textarea{
-            width:100%;
-            padding:8px;
-            border:1px solid #ccc;
-            border-radius:4px;
-            font-size:13px;
-        }
+     select{
+    width: 120PX;
+    padding:6px;
+    font-size:13px;
+}
 
-        textarea{
-            resize:none;
-        }
+textarea{
+    width:80%;          /* más chico que 100% */
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    font-size:13px;
+    resize:none;
+    float:left;         /* se pega a la izquierda */
+    margin-left:0;      /* aseguramos que no quede corrido */
+}
+
+
+
 
         .seguimiento{
             background:#f8f9fa;
@@ -191,9 +198,14 @@
 
                 <div class="campo">
                 
-                 <form method="post">
+            
+            
+            
+            
+            
+    <form method="post">
     {% csrf_token %}
-    <label>Estado</label>
+     <label>Estado</label>
     <select name="estado">
         {% for e in estados %}
             <option value="{{ e.id }}" {% if reclamo.estado.id == e.id %}selected{% endif %}>
@@ -210,12 +222,14 @@
             </option>
         {% endfor %}
     </select>
-
-
-<div class="botones">
+    <div class="botones">
         <button type="submit" class="btn guardar" onclick="guardarConPopup(event, '{{ reclamo.id }}')">Guardar Cambios</button>
 
-
+    </div>
+    </form>
+        
+    
+<div class="botones">
         <a href="{% url 'editar_reclamo' reclamo.id %}" class="btn editar" onclick="popupEditar(true)">Editar</a>
         <form method="post" action="{% url 'eliminar_reclamo' reclamo.id %}" style="display:inline;">
             {% csrf_token %}
@@ -228,16 +242,14 @@
         </form>
         <a href="{% url 'panel_control' %}" class="btn volver" onclick="volverConPopup(event, this.href)">Volver</a>
 
+</div>
 
 
 
 
-
-    </div>
-
+    
 
 
-</form>
 
 
 
