@@ -149,22 +149,19 @@ button.guardar {
             background:#6c757d;
         }
 
-       .btn-categoria {
-    background-color: #ff66cc; /* fucsia claro */
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 5px;
-    font-size: 13px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    margin-left: 10px; /* espacio respecto al combo */
-}
-.btn-categoria:hover {
-    background-color: #ff85d6; /* un tono más suave al pasar el mouse */
-}
- 
+  
+    .btn-rosa {
+        background-color: #6c1f46; /* rosa fuerte */
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+
 
     </style>
 </head>
@@ -257,7 +254,8 @@ button.guardar {
 
 <!-- Botón al lado del combo -->
 
-<a href="{% url 'categorias' %}">Gestionar Categorías</a>
+<a href="{% url 'categorias' %}" class="btn-rosa">Gestionar Categorías</a>
+
 
 
 
