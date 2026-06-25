@@ -31,8 +31,12 @@ urlpatterns = [
 path('reclamos/eliminar/<int:reclamo_id>/', views.eliminar_reclamo, name='eliminar_reclamo'),
 path('reclamos/editar/<int:reclamo_id>/', views.editar_reclamo, name='editar_reclamo'),
 
+# Gestión de Categorías
+path('categorias/', views.lista_categorias, name='lista_categorias'),
+path('categorias/editar/<int:pk>/', views.editar_categoria, name='editar_categoria'),
+path('categorias/eliminar/<int:pk>/', views.eliminar_categoria, name='eliminar_categoria'),
 
-
+path('categorias/<int:reclamo_id>/', views.lista_categorias, name='lista_categorias'),
 
 
 ]

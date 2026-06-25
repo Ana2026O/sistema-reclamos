@@ -17,6 +17,9 @@ from .models import Estado, Prioridad
 
 from .models import Estado, Prioridad, Seguimiento   
 
+from .models import Categoria
+from .forms import CategoriaForm
+
 
 # ---------------- INICIO ----------------
 def inicio(request):
@@ -114,15 +117,20 @@ def detalle_reclamo(request, reclamo_id):
             reclamo.estado = Estado.objects.get(id=request.POST.get("estado"))
         if request.POST.get("prioridad"):
             reclamo.prioridad = Prioridad.objects.get(id=request.POST.get("prioridad"))
+        if request.POST.get("categoria"):
+         reclamo.categoria = Categoria.objects.get(id=request.POST.get("categoria"))
+                
         reclamo.save()
         return redirect("panel_control")
 
     estados = Estado.objects.all()
     prioridades = Prioridad.objects.all()
+    categorias = Categoria.objects.all()
     return render(request, 'reclamos/detalle_reclamo.html', {
         'reclamo': reclamo,
         'estados': estados,
         'prioridades': prioridades,
+          'categorias': categorias,
         'seguimientos': seguimientos   # ✅ pasar seguimientos al template
     })
 
@@ -220,4 +228,46 @@ def editar_reclamo(request, reclamo_id):
     else:
         form = ReclamoForm(instance=reclamo)
     return render(request, 'reclamos/editar_reclamo.html', {'form': form, 'reclamo': reclamo})
-#---------------------------------
+
+
+#----categorias
+
+def lista_categorias(request):
+    categorias = Categoria.objects.all()
+    return render(request, 'reclamos/categorias.html', {'categorias': categorias})
+
+def editar_categoria(request, pk):
+    categoria = get_object_or_404(Categoria, pk=pk)
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        if nombre:
+            categoria.nombre = nombre
+            categoria.save()
+            return redirect("lista_categorias")
+    return render(request, "reclamos/editar_categoria.html", {"categoria": categoria})
+
+
+def eliminar_categoria(request, pk):
+    categoria = get_object_or_404(Categoria, pk=pk)
+    if request.method == "POST":
+        categoria.delete()
+        return redirect("lista_categorias")
+    return render(request, "reclamos/eliminar_categoria.html", {"categoria": categoria})
+
+
+def lista_categorias(request, reclamo_id):
+    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
+    categorias = Categoria.objects.all()
+    form = CategoriaForm()
+
+    if request.method == "POST":
+        form = CategoriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("lista_categorias", reclamo_id=reclamo.id)
+
+    return render(request, "reclamos/categorias.html", {
+        "categorias": categorias,
+        "form": form,
+        "reclamo": reclamo
+    })

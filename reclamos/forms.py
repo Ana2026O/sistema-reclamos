@@ -62,3 +62,26 @@ class UsuarioForm(forms.ModelForm):
         help_texts = {
         'username': None,  # ✅ esto elimina el texto “Requerido. 150 caracteres…”
     }
+        from django import forms
+from django.contrib.auth.models import User
+from .models import Reclamo, Categoria
+
+# Formulario para Reclamo
+class ReclamoForm(forms.ModelForm):
+    class Meta:
+        model = Reclamo
+        fields = ['descripcion', 'categoria']  # ajusta según tus campos
+
+# Formulario para Usuario (basado en el modelo User de Django)
+class UsuarioForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+# Formulario para Categoría
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nombre']   # ajusta según los campos de tu modelo Categoria

@@ -149,7 +149,22 @@ button.guardar {
             background:#6c757d;
         }
 
-        
+       .btn-categoria {
+    background-color: #ff66cc; /* fucsia claro */
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px; /* espacio respecto al combo */
+}
+.btn-categoria:hover {
+    background-color: #ff85d6; /* un tono más suave al pasar el mouse */
+}
+ 
 
     </style>
 </head>
@@ -230,7 +245,21 @@ button.guardar {
                 {{ p.nombre }}
             </option>
         {% endfor %}
-    </select>
+    </select><label for="categoria">Categoría:</label>
+    <select name="categoria">
+    {% for c in categorias %}
+        <option value="{{ c.id }}" {% if reclamo.categoria and reclamo.categoria.id == c.id %}selected{% endif %}>
+            {{ c.nombre }}
+        </option>
+    {% endfor %}
+</select>
+
+
+<!-- Botón al lado del combo -->
+
+<a href="{% url 'lista_categorias' reclamo.id %}" class="btn-categoria">Gestionar Categorías</a>
+
+     
     <div class="botones">
         <button type="submit" class="btn guardar" onclick="guardarConPopup(event, '{{ reclamo.id }}')">Guardar Cambios</button>
 
@@ -268,6 +297,7 @@ button.guardar {
 
           <button type="submit" class="btn eliminar" onclick="eliminarConPopup(event, '{{ reclamo.id }}', '{{ reclamo.categoria }}')">Eliminar</button>
 
+          
 
         </form>
         <a href="{% url 'panel_control' %}" class="btn volver" onclick="volverConPopup(event, this.href)">Volver</a>
