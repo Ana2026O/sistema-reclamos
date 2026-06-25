@@ -236,16 +236,24 @@
 
 
             <tbody>
+
+
     {% for reclamo in reclamos %}
     <tr>
         <td>{{ reclamo.id }}</td>
         <td>{{ reclamo.nombre }}</td>
-        <td>{{ reclamo.estado }}</td>
+        <td> {{ reclamo.estado }}</td>
         <td>{{ reclamo.prioridad }}</td>
+
         <td>{{ reclamo.fecha_creacion|date:"d/m/Y" }}</td>
         <td>
             {% if reclamo.id %}
-                <a href="{% url 'detalle_reclamo' reclamo.id %}" class="btn ver">Ver</a>
+                
+               
+  <a href="{% url 'detalle_reclamo' reclamo.id %}" class="btn ver">Ver</a>
+
+            
+
                 <a href="{% url 'editar_reclamo' reclamo.id %}" class="btn editar">Editar</a>
                 <a href="{% url 'eliminar_reclamo' reclamo.id %}" class="btn eliminar"
                    onclick="return confirm('¿Seguro que deseas eliminar este reclamo?');">Eliminar</a>
@@ -262,6 +270,8 @@
 </tbody>
 
             
+
+
         </table>
 
     </div>
