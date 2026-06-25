@@ -85,3 +85,44 @@ class CategoriaForm(forms.ModelForm):
     class Meta:
         model = Categoria
         fields = ['nombre']   # ajusta según los campos de tu modelo Categoria
+class ReclamoForm(forms.ModelForm):
+    nombre = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nombre y Apellido',
+            'pattern': '[A-Za-z ]+',
+            'title': 'Solo letras y espacios'
+        })
+    )
+    correo = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Correo Electrónico'
+        })
+    )
+    telefono = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Teléfono',
+            'pattern': '[0-9]+',
+            'title': 'Solo números'
+        })
+    )
+    descripcion = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Descripción del Reclamo'
+        })
+    )
+
+    class Meta:
+        model = Reclamo
+        fields = ['nombre','correo','telefono','categoria','descripcion']
+class EditarCategoriaReclamoForm(forms.ModelForm):
+    class Meta:
+        model = Reclamo
+        fields = ['categoria']  # ✅ solo este campo

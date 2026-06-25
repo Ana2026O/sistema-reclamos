@@ -3,17 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Reclamo</title>
+    <style>
+        body {
+            background-color: #fff8e1; /* amarillo claro tipo mostaza suave */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .contenedor {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            border: 2px solid #fbc02d; /* borde mostaza */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #5d4037; /* marrón oscuro para contraste */
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form p {
+            margin: 0;
+            color: #3e2723; /* texto más oscuro */
+            font-weight: bold;
+        }
+
+        button {
+            background: #fbc02d; /* mostaza */
+            color: #3e2723;      /* letras oscuras */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #f57f17; /* mostaza más intenso */
+            color: white;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #5d4037; /* marrón oscuro */
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #3e2723;
+        }
+    </style>
 </head>
 <body>
-    <h2>Editar Reclamo N° {{ reclamo.id }}</h2>
+    <div class="contenedor">
+        <h2>Editar Reclamo N° {{ reclamo.id }}</h2>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">💾 Guardar Cambios</button>
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">💾 Guardar Cambios</button>
+        </form>
 
-    <a href="{% url 'panel_control' %}">⬅ Volver al Panel</a>
+        <a href="{% url 'panel_control' %}">⬅ Volver al Panel</a>
+    </div>
 </body>
 </html>
-

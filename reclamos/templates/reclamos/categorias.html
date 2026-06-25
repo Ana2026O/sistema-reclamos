@@ -60,11 +60,11 @@
     <h2>Gestión de Categorías</h2>
 
     <!-- Formulario para crear nueva categoría -->
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="nombre" placeholder="Nueva categoría">
-        <button type="submit" class="btn btn-primary">Guardar</button>
-    </form>
+<form method="post" action="{% url 'categorias' %}">
+    {% csrf_token %}
+    <input type="text" name="nombre" placeholder="Nueva categoría" required>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
 
     <hr>
 
@@ -95,7 +95,8 @@
     </table>
 
     <!-- Botón para volver a detalle -->
-    <a href="{% url 'detalle_reclamo' reclamo.id %}" class="btn btn-volver">Volver al Detalle</a>
+   <a href="{% url 'panel_control' %}" class="btn btn-volver">Volver al Panel</a>
+
 </div>
 </body>
 </html>
