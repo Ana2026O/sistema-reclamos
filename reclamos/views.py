@@ -12,14 +12,11 @@ from .models import Reclamo
 
 from django.contrib.auth.models import User
 
-
-
 from .models import Estado, Prioridad, Seguimiento   
 
 from .models import Categoria
 from .forms import CategoriaForm
  
-
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User, Group
@@ -27,7 +24,10 @@ from .forms import UsuarioForm
 
 from .forms import ConsultaReclamoForm
 
-
+from django.shortcuts import render
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+from .models import Reclamo
 
 
 # ---------------- INICIO ----------------
@@ -352,3 +352,52 @@ def consulta_reclamo(request):
         "reclamos/consulta_reclamo.html",
         {"form": form, "resultado": resultado, "seguimiento": seguimiento}
     )
+
+   
+def estadisticas_reclamos(request):
+    estadisticas = (
+        Reclamo.objects
+        .annotate(mes=TruncMonth('fecha_creacion'))
+        .values('mes', 'estado', 'prioridad')
+        .annotate(cantidad=Count('id'))
+        .order_by('mes')
+    )
+    return render(request, 'reclamos/estadisticas.html', {'estadisticas': estadisticas})
+
+
+
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from .models import Reclamo
+
+def reclamos_pdf(request):
+    reclamos = Reclamo.objects.all().order_by('-fecha_creacion')
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reclamos_panel.pdf"'
+
+    p = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
+
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(180, height - 80, "Gestión de Reclamos")
+
+    p.setFont("Helvetica", 12)
+    y = height - 120
+    for reclamo in reclamos:
+        p.drawString(50, y, f"Nombre: {reclamo.nombre}")
+        p.drawString(250, y, f"Teléfono: {reclamo.telefono}")
+        p.drawString(400, y, f"Estado: {reclamo.estado}")
+        y -= 20
+        p.drawString(250, y, f"Prioridad: {reclamo.prioridad}")
+        y -= 30
+
+        if y < 100:  # salto de página si se llena
+            p.showPage()
+            p.setFont("Helvetica", 12)
+            y = height - 100
+
+    p.showPage()
+    p.save()
+    return response

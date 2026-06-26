@@ -52,9 +52,13 @@ path("categorias/eliminar/<int:pk>/", views.eliminar_categoria, name="eliminar_c
     path('usuarios/<int:pk>/eliminar/', eliminar_usuario, name='eliminar_usuario'),
 
     
+  path('estadisticas/', views.estadisticas_reclamos, name='reportes'),
+    path('reclamos/pdf/', views.reclamos_pdf, name='reclamos_pdf'),
+
+
+
+
 ]
-
-
 
 
 
