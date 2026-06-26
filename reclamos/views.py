@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+
 from django import forms
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -11,14 +11,22 @@ from .forms import ReclamoForm, UsuarioForm
 from .models import Reclamo
 
 from django.contrib.auth.models import User
-from .forms import UsuarioForm
 
-from .models import Estado, Prioridad
+
 
 from .models import Estado, Prioridad, Seguimiento   
 
 from .models import Categoria
 from .forms import CategoriaForm
+
+  
+
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User, Group
+from .forms import UsuarioForm
+
+
 
 
 
@@ -177,31 +185,6 @@ def descargar_pdf(request, reclamo_id):
     return response
 
 
-# ---------------- ALTA USUARIO ----------------
-
-
-def alta_usuario(request, pk=None):
-    if pk:
-        usuario = get_object_or_404(User, pk=pk)
-    else:
-        usuario = None
-
-    if request.method == 'POST':
-        form = UsuarioForm(request.POST, instance=usuario)
-        if form.is_valid():
-            user = form.save(commit=False)
-            if not form.cleaned_data['password']:
-                return render(request, 'reclamos/alta_usuario.html', {
-                    'form': form,
-                    'error': 'La contraseña es obligatoria'
-                })
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            return redirect('login_admin')   # ✅ después de crear, vuelve al login
-    else:
-        form = UsuarioForm(instance=usuario)
-
-    return render(request, 'reclamos/alta_usuario.html', {'form': form})
 
 
 
@@ -269,3 +252,71 @@ def eliminar_categoria(request, pk):
         categoria.delete()
         return redirect("categorias")
     return render(request, "reclamos/eliminar_categoria.html", {"categoria": categoria})
+
+
+
+
+
+def es_admin(user):
+    return user.groups.filter(name="admin").exists()
+
+
+# ✅ LISTA DE USUARIOS
+@login_required
+@user_passes_test(es_admin)
+def lista_usuarios(request):
+    usuarios = User.objects.all()
+    return render(request, 'reclamos/lista_usuarios.html', {'usuarios': usuarios})
+
+# ✅ ALTA / MODIFICAR USUARIO
+@login_required
+@user_passes_test(es_admin)
+def alta_usuario(request, pk=None):
+    if pk:
+        usuario = get_object_or_404(User, pk=pk)
+    else:
+        usuario = None
+
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            # Contraseña obligatoria solo si es alta
+            if not usuario and not form.cleaned_data['password']:
+                return render(request, 'reclamos/alta_usuario.html', {
+                    'form': form,
+                    'error': 'La contraseña es obligatoria'
+                })
+
+            # Guardar contraseña si se ingresó
+            if form.cleaned_data['password']:
+                user.set_password(form.cleaned_data['password'])
+
+            user.save()
+
+            # Asignar grupo según rol
+            role = form.cleaned_data.get("role")
+            if role:
+                try:
+                    grupo = Group.objects.get(name=role)
+                    user.groups.clear()
+                    user.groups.add(grupo)
+                except Group.DoesNotExist:
+                    pass
+
+            return redirect('lista_usuarios')
+    else:
+        form = UsuarioForm(instance=usuario)
+
+    return render(request, 'reclamos/alta_usuario.html', {'form': form})
+
+# ✅ ELIMINAR USUARIO
+@login_required
+@user_passes_test(es_admin)
+def eliminar_usuario(request, pk):
+    usuario = get_object_or_404(User, pk=pk)
+    if request.method == "POST":
+        usuario.delete()
+        return redirect('lista_usuarios')
+    return render(request, 'reclamos/eliminar_usuario.html', {'usuario': usuario})

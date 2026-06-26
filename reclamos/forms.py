@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Reclamo
 
+
+
 class ReclamoForm(forms.ModelForm):
     class Meta:
         model = Reclamo
@@ -126,3 +128,21 @@ class EditarCategoriaReclamoForm(forms.ModelForm):
     class Meta:
         model = Reclamo
         fields = ['categoria']  # ✅ solo este campo
+
+    from django import forms
+from django.contrib.auth.models import User
+
+class UsuarioForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        required=False,  # opcional en edición
+        label="Contraseña"
+    )
+    role = forms.ChoiceField(
+        choices=[('admin', 'Administrador'), ('operador', 'Operador')],
+        label="Rol"
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']

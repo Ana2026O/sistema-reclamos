@@ -1,6 +1,13 @@
 from django.urls import path
 from . import views
 
+
+from .views import lista_usuarios, alta_usuario, eliminar_usuario
+
+
+
+
+
 urlpatterns = [
     path('', views.inicio, name='inicio'),
 
@@ -39,9 +46,15 @@ path("categorias/eliminar/<int:pk>/", views.eliminar_categoria, name="eliminar_c
 
 
 
+ path('usuarios/', lista_usuarios, name='lista_usuarios'),
+    path('usuarios/nuevo/', alta_usuario, name='alta_usuario'),
+    path('usuarios/<int:pk>/modificar/', alta_usuario, name='modificar_usuario'),
+    path('usuarios/<int:pk>/eliminar/', eliminar_usuario, name='eliminar_usuario'),
 
-
-
-
-
+    
 ]
+
+
+
+
+

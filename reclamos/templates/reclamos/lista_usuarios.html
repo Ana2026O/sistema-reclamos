@@ -14,6 +14,8 @@ th { background:#214b78; color:white; }
 .editar { color:#e8be63; }
 .eliminar { color:#e57373; }
 .nuevo { display:inline-block; margin-bottom:20px; padding:10px 15px; background:#214b78; color:white; text-decoration:none; border-radius:5px; }
+.volver { display:inline-block; margin-left:10px; padding:10px 15px; background:#6c757d; color:white; text-decoration:none; border-radius:5px; }
+.volver:hover { background:#565e64; }
 </style>
 </head>
 <body>
@@ -23,6 +25,8 @@ th { background:#214b78; color:white; }
 
     <!-- Botón para ir al formulario de alta -->
     <a href="{% url 'alta_usuario' %}" class="nuevo">+ Nuevo Usuario</a>
+    <!-- Botón para volver al formulario en blanco -->
+    <a href="{% url 'alta_usuario' %}" class="volver">Volver al Formulario</a>
 
     <!-- Tabla de usuarios -->
     <table>
@@ -42,7 +46,7 @@ th { background:#214b78; color:white; }
             <td>{{ usuario.last_name }}</td>
             <td>{{ usuario.email }}</td>
             <td class="acciones">
-                <a href="{% url 'editar_usuario' usuario.id %}" class="editar">✏️ Editar</a>
+                <a href="{% url 'modificar_usuario' usuario.id %}" class="editar">✏️ Editar</a>
                 <a href="{% url 'eliminar_usuario' usuario.id %}" class="eliminar"
                    onclick="return confirm('¿Seguro que querés eliminar este usuario?');">🗑 Eliminar</a>
             </td>
