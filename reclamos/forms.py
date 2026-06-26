@@ -146,3 +146,8 @@ class UsuarioForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password']
+
+class ConsultaReclamoForm(forms.Form):
+    nombre_apellido = forms.CharField(label="Nombre y Apellido", max_length=100)
+    numero_referencia = forms.CharField(label="Número de referencia", max_length=50)
+    

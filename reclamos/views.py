@@ -18,15 +18,14 @@ from .models import Estado, Prioridad, Seguimiento
 
 from .models import Categoria
 from .forms import CategoriaForm
-
-  
+ 
 
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User, Group
 from .forms import UsuarioForm
 
-
+from .forms import ConsultaReclamoForm
 
 
 
@@ -320,3 +319,36 @@ def eliminar_usuario(request, pk):
         usuario.delete()
         return redirect('lista_usuarios')
     return render(request, 'reclamos/eliminar_usuario.html', {'usuario': usuario})
+
+
+
+
+def consulta_reclamo(request):
+    resultado = None
+    seguimiento = None
+
+    if request.method == "POST":
+        form = ConsultaReclamoForm(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data["nombre_apellido"]
+            referencia = form.cleaned_data["numero_referencia"]
+
+            try:
+                reclamo = Reclamo.objects.get(id=referencia)
+                resultado = {
+                    "numero": reclamo.id,
+                    "nombre": nombre,
+                    "estado": reclamo.estado.nombre,
+                    "categoria": reclamo.categoria.nombre if reclamo.categoria else "Sin categoría"
+                }
+                seguimiento = reclamo.seguimiento_set.last()
+            except Reclamo.DoesNotExist:
+                resultado = {"error": "No se encontró ningún reclamo con ese número."}
+    else:
+        form = ConsultaReclamoForm()
+
+    return render(
+        request,
+        "reclamos/consulta_reclamo.html",
+        {"form": form, "resultado": resultado, "seguimiento": seguimiento}
+    )
