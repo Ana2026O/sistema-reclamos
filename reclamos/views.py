@@ -28,6 +28,9 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from .models import Reclamo
+from .forms import EditarCategoriaReclamoForm
+
+from .forms import EditarReclamoForm
 
 
 # ---------------- INICIO ----------------
@@ -202,17 +205,20 @@ def eliminar_reclamo(request, reclamo_id):
 
 
 # ---------------- EDITAR RECLAMO ----------------
-
 def editar_reclamo(request, pk):
     reclamo = get_object_or_404(Reclamo, pk=pk)
     if request.method == "POST":
-        form = EditarCategoriaReclamoForm(request.POST, instance=reclamo)
+        form = EditarReclamoForm(request.POST, instance=reclamo)
         if form.is_valid():
             form.save()
             return redirect('panel_control')
     else:
-        form = EditarCategoriaReclamoForm(instance=reclamo)
-    return render(request, 'editar_reclamo.html', {'form': form, 'reclamo': reclamo})
+        form = EditarReclamoForm(instance=reclamo)
+
+    return render(request, 'reclamos/editar_reclamo.html', {'form': form, 'reclamo': reclamo})
+
+
+
 
 #---------------------------------------------------------------categorias
 

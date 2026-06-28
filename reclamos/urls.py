@@ -36,7 +36,7 @@ urlpatterns = [
     
     
 path('reclamos/eliminar/<int:reclamo_id>/', views.eliminar_reclamo, name='eliminar_reclamo'),
-path('reclamos/editar/<int:reclamo_id>/', views.editar_reclamo, name='editar_reclamo'),
+
 
 # Gestión de Categorías
 
@@ -57,6 +57,8 @@ path("categorias/eliminar/<int:pk>/", views.eliminar_categoria, name="eliminar_c
 
 
 
+
+path("reclamos/editar/<int:pk>/", views.editar_reclamo, name="editar_reclamo")
 
 ]
 

@@ -151,3 +151,9 @@ class ConsultaReclamoForm(forms.Form):
     nombre_apellido = forms.CharField(label="Nombre y Apellido", max_length=100)
     numero_referencia = forms.CharField(label="Número de referencia", max_length=50)
     
+
+
+class EditarReclamoForm(forms.ModelForm):
+    class Meta:
+        model = Reclamo
+        fields = ['nombre', 'correo', 'telefono', 'categoria', 'descripcion', 'estado', 'prioridad']
