@@ -33,6 +33,7 @@ th { background:#214b78; color:white; }
         <tr>
             <th>ID</th>
             <th>Usuario</th>
+            <th>Rol</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Email</th>
@@ -42,9 +43,18 @@ th { background:#214b78; color:white; }
         <tr>
             <td>{{ usuario.id }}</td>
             <td>{{ usuario.username }}</td>
+            <td>
+                 {% for g in usuario.groups.all %}
+                    {{ g.name }}
+                    {% empty %}
+                     Sin rol
+                     {% endfor %}
+          </td>
+
             <td>{{ usuario.first_name }}</td>
             <td>{{ usuario.last_name }}</td>
             <td>{{ usuario.email }}</td>
+
             <td class="acciones">
                 <a href="{% url 'modificar_usuario' usuario.id %}" class="editar">✏️ Editar</a>
                 <a href="{% url 'eliminar_usuario' usuario.id %}" class="eliminar"
