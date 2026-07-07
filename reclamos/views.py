@@ -36,7 +36,10 @@ from django.utils import timezone
 from .models import Reclamo, ReclamoEliminado
 
 from django.utils import timezone
-
+from django.db.models import Sum
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+from django.views.decorators.cache import never_cache
 
 
 
@@ -52,16 +55,17 @@ def registrar_reclamo(request):
         if form.is_valid():
             print("FORMULARIO VALIDO")
             reclamo = form.save(commit=False)
-            from .models import Estado, Prioridad
-            reclamo.usuario = User.objects.first()
+            reclamo.usuario = User.objects.first()  # acá luego podés poner el usuario logueado
             reclamo.estado = Estado.objects.get(nombre='Nuevo')
             reclamo.prioridad = Prioridad.objects.get(nombre='Media')
             reclamo.save()
+            # redirige a confirmación o a la misma vista limpia
             return redirect('confirmacion_reclamo', reclamo_id=reclamo.id)
         else:
             print("ERRORES DEL FORMULARIO:", form.errors)
     else:
-        form = ReclamoForm()
+        form = ReclamoForm()  # formulario vacío
+
     return render(request, 'reclamos/registrar_reclamo.html', {'form': form})
 
 
@@ -84,18 +88,15 @@ def eliminar_reclamo(request, reclamo_id):
     if request.method == "POST":
         # Guardar auditoría ANTES de borrar
         ReclamoEliminado.objects.create(
-            reclamo_id=reclamo.id,
-            fecha_eliminacion=timezone.now(),
-            usuario_accion=request.user.username if request.user.is_authenticated else "Anónimo"
+            reclamo=reclamo,
+            usuario_accion=request.user if request.user.is_authenticated else None
         )
 
-        # Eliminar físicamente
+        # Eliminar físicamente el reclamo
         reclamo.delete()
         return redirect('panel_control')
 
     return redirect('detalle_reclamo', reclamo_id=reclamo_id)
-
-
 
 
 
@@ -224,14 +225,17 @@ def descargar_pdf(request, reclamo_id):
                  f"Último cambio de prioridad: {reclamo.fecha_prioridad.strftime('%d/%m/%Y %H:%M:%S')} por {reclamo.usuario_accion}")
 
 
-    # 🔴 Bloque de eliminación
+    #  Bloque de eliminación
     eliminacion = ReclamoEliminado.objects.filter(reclamo_id=reclamo_id).first()
     if eliminacion:
         p.setFillColor("red")
         p.setFont("Helvetica-Bold", 10)
-        p.drawString(2*cm, height - 8*cm,
-                     f"⚠️ Eliminado el {eliminacion.fecha_eliminacion.strftime('%d/%m/%Y %H:%M:%S')} por {eliminacion.usuario_accion}")
+        p.drawString(
+        2*cm, height - 8*cm,
+        f" Eliminado el {eliminacion.fecha_eliminacion.strftime('%d/%m/%Y %H:%M:%S')} por {eliminacion.usuario_accion.username if eliminacion.usuario_accion else 'sistema'}"
+    )
         p.setFillColor("black")
+
 
     # Seguimientos
     y = height - 12*cm
@@ -422,20 +426,6 @@ def consulta_reclamo(request):
     )
 
    
-def estadisticas_reclamos(request):
-    estadisticas = (
-        Reclamo.objects
-        .annotate(mes=TruncMonth('fecha_creacion'))
-        .values('mes', 'estado', 'prioridad')
-        .annotate(cantidad=Count('id'))
-        .order_by('mes')
-    )
-    return render(request, 'reclamos/estadisticas.html', {'estadisticas': estadisticas})
-
-
-
-
-
 
 def reclamos_pdf(request):
     reclamos = Reclamo.objects.all().order_by('-fecha_creacion')
@@ -479,3 +469,42 @@ def reclamos_pdf(request):
     p.save()
     return response
 
+
+
+def estadisticas_reclamos(request):
+    # Lista para la tabla (agrupada por mes, estado y prioridad)
+    estadisticas = (
+        Reclamo.objects
+        .annotate(mes=TruncMonth('fecha_creacion'))
+        .values('mes', 'estado__nombre', 'prioridad__nombre')
+        .annotate(cantidad=Count('id'))
+        .order_by('mes')
+    )
+
+    # Totales por estado para el gráfico circular (usando los nombres reales de tu base)
+    nuevo = Reclamo.objects.filter(estado__nombre__iexact="Nuevo").count()
+    en_analisis = Reclamo.objects.filter(estado__nombre__iexact="En analisis").count()
+    en_proceso = Reclamo.objects.filter(estado__nombre__iexact="En Proceso").count()
+    resueltos = Reclamo.objects.filter(estado__nombre__iexact="Resuelto").count()
+    cerrados = Reclamo.objects.filter(estado__nombre__iexact="Cerrado").count()
+
+    totales = {
+        "nuevo": nuevo,
+        "en_analisis": en_analisis,
+        "en_proceso": en_proceso,
+        "resueltos": resueltos,
+        "cerrados": cerrados,
+    }
+
+    # 👉 Debug: mostrar en consola los valores
+    print("Nuevo:", nuevo)
+    print("En análisis:", en_analisis)
+    print("En Proceso:", en_proceso)
+    print("Resueltos:", resueltos)
+    print("Cerrados:", cerrados)
+
+    # 👉 El return render SIEMPRE va al final de la función
+    return render(request, 'reclamos/estadisticas.html', {
+        'estadisticas': estadisticas,
+        'totales': totales
+    })

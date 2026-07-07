@@ -66,12 +66,24 @@ class Reclamo(models.Model):
 
 
 class ReclamoEliminado(models.Model):
-    reclamo = models.ForeignKey(Reclamo, on_delete=models.CASCADE)
-    fecha_eliminacion = models.DateTimeField()
-    usuario_accion = models.CharField(max_length=100)
+    reclamo = models.ForeignKey(
+        Reclamo,
+        on_delete=models.CASCADE,
+        null=True,       # permite valores nulos en registros viejos
+        blank=True
+    )
+    fecha_eliminacion = models.DateTimeField(auto_now_add=True)
+    usuario_accion = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,       # permite valores nulos en registros viejos
+        blank=True,
+        default=None     # evita que Django te pida un default en migraciones
+    )
 
     def __str__(self):
         return f"{self.reclamo} eliminado por {self.usuario_accion}"
+
 
 
 class Seguimiento(models.Model):
