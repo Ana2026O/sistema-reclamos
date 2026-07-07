@@ -131,3 +131,5 @@ LOGOUT_REDIRECT_URL = '/login/'    # a dónde va después de salir
 # Idioma y zona horaria
 LANGUAGE_CODE = 'es'
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
+USE_TZ = True
+

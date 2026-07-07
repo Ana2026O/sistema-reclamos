@@ -148,23 +148,30 @@ body{
 
 <div class="menu">
 
+    <!-- Cartel de permisos -->
+    {% if messages %}
+      <div class="alert" style="background:#ffdddd; border:1px solid red; padding:15px; border-radius:8px; width:500px; text-align:center; font-weight:bold; color:red;">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    {% endif %}
+
     <button class="boton" onclick="window.location.href='{% url 'alta_usuario' %}'">
-        Alta usuarios
+        Administrador de usuarios
     </button>
 
     <button class="boton" onclick="window.location.href='{% url 'panel_control' %}'">
         Gestión ABM
     </button>
 
-
-    
     <button class="boton" onclick="window.location.href='{% url 'reportes' %}'">
-    Reportes y estadísticas
-</button>
-
-
+        Reportes y estadísticas
+    </button>
 
 </div>
+
+
 
 <button class="salir" onclick="window.location.href='{% url 'inicio' %}'">
     SALIR

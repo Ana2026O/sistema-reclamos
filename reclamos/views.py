@@ -31,6 +31,13 @@ from .models import Reclamo
 from .forms import EditarCategoriaReclamoForm
 
 from .forms import EditarReclamoForm
+from django.contrib import messages
+from django.utils import timezone
+from .models import Reclamo, ReclamoEliminado
+
+from django.utils import timezone
+
+
 
 
 # ---------------- INICIO ----------------
@@ -65,6 +72,31 @@ def confirmacion_reclamo(request, reclamo_id):
 
 def consulta_reclamo(request):
     return render(request, 'reclamos/consulta_reclamo.html')
+
+
+
+
+
+
+def eliminar_reclamo(request, reclamo_id):
+    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
+
+    if request.method == "POST":
+        # Guardar auditoría ANTES de borrar
+        ReclamoEliminado.objects.create(
+            reclamo_id=reclamo.id,
+            fecha_eliminacion=timezone.now(),
+            usuario_accion=request.user.username if request.user.is_authenticated else "Anónimo"
+        )
+
+        # Eliminar físicamente
+        reclamo.delete()
+        return redirect('panel_control')
+
+    return redirect('detalle_reclamo', reclamo_id=reclamo_id)
+
+
+
 
 
 # ---------------- LOGIN ADMIN ----------------
@@ -108,10 +140,11 @@ def panel_control(request):
 
 
 # ------------ DETALLE RECLAMO ----------------
+from django.utils import timezone
 
 def detalle_reclamo(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
-    seguimientos = reclamo.seguimiento_set.all().order_by("-fecha")   # ✅ obtener seguimientos
+    seguimientos = reclamo.seguimiento_set.all().order_by("-fecha")
 
     if request.method == "POST":
         # Si viene un comentario nuevo
@@ -119,22 +152,31 @@ def detalle_reclamo(request, reclamo_id):
         if comentario:
             Seguimiento.objects.create(
                 reclamo=reclamo,
-                usuario=request.user,   # el operador logueado
+                usuario=request.user,   # operador logueado
                 comentario=comentario
             )
             return redirect("detalle_reclamo", reclamo_id=reclamo.id)
 
-        # Si se cambian estado/prioridad
+        # Si se cambian estado/prioridad/categoría
         if request.POST.get("estado"):
             reclamo.estado = Estado.objects.get(id=request.POST.get("estado"))
+            reclamo.fecha_estado = timezone.now()
         if request.POST.get("prioridad"):
             reclamo.prioridad = Prioridad.objects.get(id=request.POST.get("prioridad"))
+            reclamo.fecha_prioridad = timezone.now()
         if request.POST.get("categoria"):
-         reclamo.categoria = Categoria.objects.get(id=request.POST.get("categoria"))
-                
+            reclamo.categoria = Categoria.objects.get(id=request.POST.get("categoria"))
+
+        # Guardar el usuario que hizo la acción
+        if request.user.is_authenticated:
+            reclamo.usuario_accion = request.user.username
+        else:
+            reclamo.usuario_accion = "Anónimo"
+
         reclamo.save()
         return redirect("panel_control")
 
+    # Si no es POST, mostrar el detalle
     estados = Estado.objects.all()
     prioridades = Prioridad.objects.all()
     categorias = Categoria.objects.all()
@@ -142,16 +184,15 @@ def detalle_reclamo(request, reclamo_id):
         'reclamo': reclamo,
         'estados': estados,
         'prioridades': prioridades,
-          'categorias': categorias,
-        'seguimientos': seguimientos   # ✅ pasar seguimientos al template
+        'categorias': categorias,
+        'seguimientos': seguimientos
     })
 
-    
 
 
-# ---------------- DESCARGAR PDF ----------------
 def descargar_pdf(request, reclamo_id):
     reclamo = get_object_or_404(Reclamo, id=reclamo_id)
+    seguimientos = reclamo.seguimiento_set.all().order_by("-fecha")
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="reclamo_{reclamo.id}.pdf"'
@@ -159,33 +200,57 @@ def descargar_pdf(request, reclamo_id):
     p = canvas.Canvas(response, pagesize=A4)
     width, height = A4
 
+    # Encabezado
     p.setFont("Helvetica-Bold", 16)
     p.drawString(2*cm, height - 2*cm, "Sistema de Reclamos - Confirmación")
     p.line(2*cm, height - 2.2*cm, width - 2*cm, height - 2.2*cm)
 
+    # Datos principales
     p.setFont("Helvetica", 12)
     p.drawString(2*cm, height - 3*cm, f"Reclamo N°: {reclamo.id}")
-    p.drawString(2*cm, height - 4*cm, f"Fecha: {reclamo.fecha_creacion.strftime('%d/%m/%Y %H:%M')}")
+    p.drawString(2*cm, height - 4*cm,
+                 f"Fecha creación: {reclamo.fecha_creacion.strftime('%d/%m/%Y %H:%M:%S')}")
     p.drawString(2*cm, height - 5*cm, f"Categoría: {reclamo.categoria}")
+
+    # Estado y prioridad
     p.drawString(2*cm, height - 6*cm, f"Estado: {reclamo.estado}")
+    if reclamo.fecha_estado:
+                 p.drawString(2*cm, height - 6.5*cm,
+                 f"Último cambio de estado: {reclamo.fecha_estado.strftime('%d/%m/%Y %H:%M:%S')} por {reclamo.usuario_accion}")
+
     p.drawString(2*cm, height - 7*cm, f"Prioridad: {reclamo.prioridad}")
+    if reclamo.fecha_prioridad:
+                p.drawString(2*cm, height - 7.5*cm,
+                 f"Último cambio de prioridad: {reclamo.fecha_prioridad.strftime('%d/%m/%Y %H:%M:%S')} por {reclamo.usuario_accion}")
 
-    p.setFont("Helvetica", 12)
 
-    p.drawString(2*cm, height - 8*cm, "Descripción:")
-    text_obj = p.beginText(2*cm, height - 9*cm)
-    text_obj.setFont("Helvetica", 11)
-    text_obj.textLines(reclamo.descripcion)
-    p.drawText(text_obj)
+    # 🔴 Bloque de eliminación
+    eliminacion = ReclamoEliminado.objects.filter(reclamo_id=reclamo_id).first()
+    if eliminacion:
+        p.setFillColor("red")
+        p.setFont("Helvetica-Bold", 10)
+        p.drawString(2*cm, height - 8*cm,
+                     f"⚠️ Eliminado el {eliminacion.fecha_eliminacion.strftime('%d/%m/%Y %H:%M:%S')} por {eliminacion.usuario_accion}")
+        p.setFillColor("black")
 
-    p.setFont("Helvetica-Oblique", 10)
+    # Seguimientos
+    y = height - 12*cm
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(2*cm, y, "Seguimientos:")
+    y -= 0.5*cm
+    p.setFont("Helvetica", 9)
+    for s in seguimientos:
+        p.drawString(2*cm, y,
+                     f"- {s.comentario} (el {s.fecha.strftime('%d/%m/%Y %H:%M:%S')} por {s.usuario})")
+        y -= 0.5*cm
+
+    # Pie
+    p.setFont("Helvetica-Oblique", 8)
     p.drawString(2*cm, 2*cm, "Este documento fue generado automáticamente por el sistema de reclamos.")
 
     p.showPage()
     p.save()
-
     return response
-
 
 
 
@@ -195,14 +260,6 @@ def descargar_pdf(request, reclamo_id):
 def reportes(request):
     return render(request, 'reclamos/reportes.html')
 
-# ---------------- ELIMINAR RECLAMO ----------------
-def eliminar_reclamo(request, reclamo_id):
-    reclamo = get_object_or_404(Reclamo, id=reclamo_id)
-    if request.method == "POST":   # ✅ solo elimina con POST
-        reclamo.delete()
-        return redirect('panel_control')
-    return redirect('detalle_reclamo', reclamo_id=reclamo_id)
-
 
 # ---------------- EDITAR RECLAMO ----------------
 def editar_reclamo(request, pk):
@@ -210,12 +267,25 @@ def editar_reclamo(request, pk):
     if request.method == "POST":
         form = EditarReclamoForm(request.POST, instance=reclamo)
         if form.is_valid():
-            form.save()
+            reclamo = form.save(commit=False)
+
+            # Si cambió el estado
+            if 'estado' in form.changed_data:
+                reclamo.fecha_estado = timezone.now()
+                reclamo.usuario_accion = request.user.username
+
+            # Si cambió la prioridad
+            if 'prioridad' in form.changed_data:
+                reclamo.fecha_prioridad = timezone.now()
+                reclamo.usuario_accion = request.user.username
+
+            reclamo.save()
             return redirect('panel_control')
     else:
         form = EditarReclamoForm(instance=reclamo)
 
     return render(request, 'reclamos/editar_reclamo.html', {'form': form, 'reclamo': reclamo})
+
 
 
 
@@ -235,16 +305,12 @@ def lista_categorias(request):
 
 
 
-
-
-
-
 def editar_categoria(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == "POST":
         form = CategoriaForm(request.POST, instance=categoria)
         if form.is_valid():
-            form.save()   # ✅ guarda cambios
+            form.save()   # guarda cambios
             return redirect("categorias")
     else:
         form = CategoriaForm(instance=categoria)
@@ -266,41 +332,38 @@ def es_admin(user):
     return user.groups.filter(name="admin").exists()
 
 
-# ✅ LISTA DE USUARIOS
+#  LISTA DE USUARIOS
 @login_required
 @user_passes_test(es_admin)
 def lista_usuarios(request):
     usuarios = User.objects.all()
     return render(request, 'reclamos/lista_usuarios.html', {'usuarios': usuarios})
 
-# ✅ ALTA / MODIFICAR USUARIO
 @login_required
-@user_passes_test(es_admin)
 def alta_usuario(request, pk=None):
-    if pk:
-        usuario = get_object_or_404(User, pk=pk)
-    else:
-        usuario = None
+    # Bloqueo para operadores
+    if not request.user.groups.filter(name="admin").exists():
+        messages.error(request, "❌ Usted necesita permisos de Administrador para acceder a Alta de Usuario.")
+        return redirect("menu_admin")
 
+    # --- lógica normal de alta/modificación ---
+    usuario = get_object_or_404(User, pk=pk) if pk else None
     if request.method == 'POST':
         form = UsuarioForm(request.POST, instance=usuario)
         if form.is_valid():
             user = form.save(commit=False)
 
-            # Contraseña obligatoria solo si es alta
             if not usuario and not form.cleaned_data['password']:
                 return render(request, 'reclamos/alta_usuario.html', {
                     'form': form,
                     'error': 'La contraseña es obligatoria'
                 })
 
-            # Guardar contraseña si se ingresó
             if form.cleaned_data['password']:
                 user.set_password(form.cleaned_data['password'])
 
             user.save()
 
-            # Asignar grupo según rol
             role = form.cleaned_data.get("role")
             if role:
                 try:
@@ -315,8 +378,7 @@ def alta_usuario(request, pk=None):
         form = UsuarioForm(instance=usuario)
 
     return render(request, 'reclamos/alta_usuario.html', {'form': form})
-
-# ✅ ELIMINAR USUARIO
+#  ELIMINAR USUARIO
 @login_required
 @user_passes_test(es_admin)
 def eliminar_usuario(request, pk):
@@ -372,10 +434,8 @@ def estadisticas_reclamos(request):
 
 
 
-from django.http import HttpResponse
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from .models import Reclamo
+
+
 
 def reclamos_pdf(request):
     reclamos = Reclamo.objects.all().order_by('-fecha_creacion')
@@ -397,7 +457,18 @@ def reclamos_pdf(request):
         p.drawString(400, y, f"Estado: {reclamo.estado}")
         y -= 20
         p.drawString(250, y, f"Prioridad: {reclamo.prioridad}")
+        y -= 20
+
+        # 👇 Aquí agregamos hora y usuario
+        fecha_estado = timezone.localtime(reclamo.fecha_estado).strftime('%d/%m/%Y %H:%M:%S') if reclamo.fecha_estado else '---'
+        fecha_prioridad = timezone.localtime(reclamo.fecha_prioridad).strftime('%d/%m/%Y %H:%M:%S') if reclamo.fecha_prioridad else '---'
+
+        p.setFont("Helvetica", 9)
+        p.drawString(50, y, f"Último cambio de estado: {fecha_estado} por {reclamo.usuario_accion or 'sistema'}")
+        y -= 15
+        p.drawString(50, y, f"Último cambio de prioridad: {fecha_prioridad} por {reclamo.usuario_accion or 'sistema'}")
         y -= 30
+        p.setFont("Helvetica", 12)
 
         if y < 100:  # salto de página si se llena
             p.showPage()
@@ -407,3 +478,4 @@ def reclamos_pdf(request):
     p.showPage()
     p.save()
     return response
+
