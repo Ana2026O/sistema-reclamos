@@ -122,6 +122,8 @@ def login_admin(request):
 
 
 
+
+
 # ---------------- MENÚ ADMIN ----------------
 def menu_admin(request):
     return render(request, 'reclamos/menu_admin.html')
@@ -133,9 +135,11 @@ def panel_control(request):
     context = {
         'reclamos': reclamos,
         'total': reclamos.count(),
-        'pendientes': reclamos.filter(estado__nombre='Pendiente').count(),
-        'proceso': reclamos.filter(estado__nombre='En Proceso').count(),
+        'nuevos': reclamos.filter(estado__nombre='Nuevo').count(),
+        'analisis': reclamos.filter(estado__nombre='En analisis').count(),
+        'proceso': reclamos.filter(estado__nombre='En proceso').count(),
         'resueltos': reclamos.filter(estado__nombre='Resuelto').count(),
+        'cerrados': reclamos.filter(estado__nombre='Cerrado').count(),
     }
     return render(request, 'reclamos/panel_control.html', context)
 
