@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio - Sistema de Reclamos</title>
+
+    <style>
+        body{
+            margin:0;
+            height:100vh;
+            background:#0b2d5c;
+            color:white;
+            font-family:Arial, sans-serif;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction:column;
+        }
+
+        h1{
+            font-size:60px;
+            margin-bottom:10px;
+            font-weight:600;
+        }
+
+        h2{
+            font-size:24px;
+            font-weight:300;
+            margin-bottom:50px;
+        }
+
+        .btn-ingresar{
+            background:white;
+            color:#0b2d5c;
+            text-decoration:none;
+            padding:15px 40px;
+            border-radius:8px;
+            font-size:20px;
+            font-weight:bold;
+        }
+
+        .alumna{
+            position:absolute;
+            right:30px;
+            bottom:20px;
+            font-size:16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bienvenido</h1>
+
+    <h2>Sistema de Registro de Reclamos</h2>
+
+ <div class="contenedor-boton">
+    <a href="{% url 'registrar_reclamo' %}" class="btn-ingresar">
+        Ingresar
+    </a>
+</div>
+
+    <div class="alumna">
+        Alumna: Ortiz Ana
+    </div>
+
+</body>
+</html>
+```
+

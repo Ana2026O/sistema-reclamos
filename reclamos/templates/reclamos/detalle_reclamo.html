@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Reclamo</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+        }
+
+        .navbar{
+            background:#1f4a8a;
+            color:white;
+            padding:15px 25px;
+        }
+
+        .navbar h1{
+            font-size:22px;
+        }
+
+        .contenedor{
+            width:90%;
+            margin:20px auto;
+        }
+
+        .card{
+            background:white;
+            padding:25px;
+            border-radius:8px;
+            box-shadow:0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            color:#1f4a8a;
+            font-size:20px;
+            margin-bottom:20px;
+        }
+
+        h3{
+            color:#444;
+            font-size:16px;
+            margin-top:25px;
+            margin-bottom:10px;
+        }
+
+        .fila{
+            display:flex;
+            gap:30px;
+            margin-bottom:15px;
+        }
+
+        .campo{
+            flex:1;
+        }
+
+        .campo label{
+            font-size:13px;
+            font-weight:bold;
+            color:#555;
+        }
+
+        .campo p{
+            margin-top:5px;
+            font-size:14px;
+        }
+
+        .descripcion{
+            background:#f8f9fa;
+            border:1px solid #ddd;
+            padding:15px;
+            border-radius:5px;
+            margin-top:10px;
+        }
+
+     select{
+    width: 170PX;
+    padding:6px;
+    font-size:13px;
+}
+
+textarea {
+    width:70%;          /* más angosto */
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:4px;
+    font-size:13px;
+    resize:none;
+    display:inline-block; /* se comporta como bloque en línea */
+    vertical-align:top;   /* se alinea arriba */
+}
+
+button.guardar {
+    display:inline-block; /* queda al lado del textarea */
+    margin-left:10px;     /* espacio entre textarea y botón */
+    vertical-align:top;   /* alinea arriba */
+}
+
+
+
+
+
+        .seguimiento{
+            background:#f8f9fa;
+            border-left:4px solid #1f4a8a;
+            padding:10px;
+            margin-bottom:10px;
+            font-size:13px;
+        }
+
+        .botones{
+            margin-top:25px;
+        }
+
+        .btn{
+            padding:8px 15px;
+            text-decoration:none;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            color:white;
+            font-size:13px;
+            margin-right:8px;
+        }
+
+        .guardar{
+            background:#1f4a8a;
+        }
+
+        .editar{
+            background:#ffc107;
+            color:black;
+        }
+
+        .eliminar{
+            background:#dc3545;
+        }
+
+        .volver{
+            background:#6c757d;
+        }
+
+  
+    .btn-rosa {
+        background-color: #ff69b4; /* rosa fuerte */
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>Detalle del Reclamo</h1>
+    </div>
+
+    <div class="contenedor">
+
+        <div class="card">
+
+            <h2>Referencia: {{ reclamo.id }}</h2>
+
+            <h3>Datos del Solicitante</h3>
+
+            <div class="fila">
+
+                <div class="campo">
+                    <label>Nombre</label>
+                    <p>{{ reclamo.nombre }}</p>
+                </div>
+
+                <div class="campo">
+                    <label>Correo</label>
+                    <p>{{ reclamo.correo }}</p>
+                </div>
+
+            </div>
+
+            <div class="fila">
+
+                <div class="campo">
+                    <label>Teléfono</label>
+                    <p>{{ reclamo.telefono }}</p>
+                </div>
+
+                <div class="campo">
+                    <label>Categoría</label>
+                    <p>{{ reclamo.categoria }}</p>
+                </div>
+
+            </div>
+
+            <h3>Descripción del Reclamo</h3>
+
+            <div class="descripcion">
+                {{ reclamo.descripcion }}
+            </div>
+
+            <h3>Estado y Prioridad</h3>
+
+            <div class="fila">
+
+                <div class="campo">
+                
+            
+            
+            
+            
+            
+    <form method="post">
+    {% csrf_token %}
+     <label>Estado</label>
+    <select name="estado">
+        {% for e in estados %}
+            <option value="{{ e.id }}" {% if reclamo.estado.id == e.id %}selected{% endif %}>
+                {{ e.nombre }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Prioridad</label>
+    <select name="prioridad">
+        {% for p in prioridades %}
+            <option value="{{ p.id }}" {% if reclamo.prioridad.id == p.id %}selected{% endif %}>
+                {{ p.nombre }}
+            </option>
+        {% endfor %}
+    </select><label for="categoria">Categoría:</label>
+    <select name="categoria">
+    {% for c in categorias %}
+        <option value="{{ c.id }}" {% if reclamo.categoria and reclamo.categoria.id == c.id %}selected{% endif %}>
+            {{ c.nombre }}
+        </option>
+    {% endfor %}
+</select>
+
+
+<!-- Botón al lado del combo -->
+
+<a href="{% url 'categorias' %}" class="btn-rosa">Gestionar Categorías</a>
+
+
+
+
+
+     
+    <div class="botones">
+        <button type="submit" class="btn guardar" onclick="guardarConPopup(event, '{{ reclamo.id }}')">Guardar Cambios</button>
+
+    </div>
+    </form>
+    
+            <h3>Observaciones</h3>
+
+<!-- Formulario para agregar observación -->
+<form method="post" action="{% url 'detalle_reclamo' reclamo.id %}">
+    {% csrf_token %}
+    <textarea name="comentario" rows="3" placeholder="Escribe tu observación aquí..."></textarea>
+    <button type="submit" class="btn guardar">Agregar Observación</button>
+</form>
+
+<!-- Lista de observaciones -->
+{% for seguimiento in seguimientos %}
+    <div class="seguimiento">
+        <strong>{{ seguimiento.fecha|date:"d/m/Y H:i" }}</strong> - {{ seguimiento.usuario }}
+        <br>
+        {{ seguimiento.comentario }}
+    </div>
+{% empty %}
+    <p>No existen observaciones registradas.</p>
+{% endfor %}
+
+        
+    
+<div class="botones">
+        <a href="{% url 'editar_reclamo' reclamo.id %}" class="btn editar" onclick="popupEditar(true)">Editar</a>
+        <form method="post" action="{% url 'eliminar_reclamo' reclamo.id %}" style="display:inline;">
+            {% csrf_token %}
+
+
+
+          <button type="submit" class="btn eliminar" onclick="eliminarConPopup(event, '{{ reclamo.id }}', '{{ reclamo.categoria }}')">Eliminar</button>
+
+          
+
+        </form>
+        <a href="{% url 'panel_control' %}" class="btn volver" onclick="volverConPopup(event, this.href)">Volver</a>
+
+</div>
+
+
+
+
+    
+
+
+
+
+
+
+            </div>
+
+            
+
+        
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+
+<script>
+    function guardarConPopup(event, id){
+    event.preventDefault();
+    Swal.fire({
+        icon: 'success',
+        title: 'Guardado',
+        text: `El reclamo #${id} fue guardado correctamente ✅`,
+        confirmButtonColor: '#1f4a8a'
+    }).then(() => {
+        event.target.closest("form").submit();
+    });
+}
+
+
+   function eliminarConPopup(event, id, categoria){
+    event.preventDefault();
+    Swal.fire({
+        icon: 'warning',
+        title: '¿Eliminar reclamo?',
+        text: `¿Seguro que quieres eliminar el reclamo #${id} de la categoría ${categoria}?`,
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar'
+    }).then((result) => {
+        if(result.isConfirmed){
+            event.target.closest("form").submit();
+        }
+    });
+}
+
+    
+
+    function volverConPopup(event, url){
+        event.preventDefault();
+        Swal.fire({
+            icon: 'info',
+            title: 'Volviendo',
+            text: 'Regresando al Panel de Control ↩️',
+            confirmButtonColor: '#6c757d'
+        }).then(() => {
+            window.location.href = url;
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+</html>

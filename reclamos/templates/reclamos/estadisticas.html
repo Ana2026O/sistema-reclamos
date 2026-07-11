@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de Reclamos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .contenedor {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 60%;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        canvas {
+            max-width: 400px;
+            max-height: 400px;
+        }
+        /* Botón de imprimir seguimiento */
+        .btn-seguimiento {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #f7941d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .btn-seguimiento:hover {
+            background: #e67e00;
+        }
+        /* Botón volver al menú */
+        .btn-volver {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1f4f82;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .btn-volver:hover {
+            background: #163b61;
+        }
+    </style>
+</head>
+<body>
+    <h1>Estadísticas de Reclamos</h1>
+
+    <div class="contenedor">
+        <!-- Gráfico circular -->
+        <canvas id="graficoEstados"></canvas>
+
+        <!-- Tabla de estadísticas -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Mes</th>
+                    <th>Estado</th>
+                    <th>Prioridad</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in estadisticas %}
+                <tr>
+                    <td>{{ item.mes|date:"F Y" }}</td>
+                    <td>{{ item.estado__nombre }}</td>
+                    <td>{{ item.prioridad__nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Botón para imprimir seguimiento -->
+    <button class="btn-seguimiento" onclick="window.location.href='{% url 'reclamos_pdf' %}'">
+        📄 Imprimir Seguimiento
+    </button>
+
+    <!-- Botón para volver al menú -->
+    <button class="btn-volver" onclick="window.location.href='/menu-admin/'">
+        ⬅️ Volver al menú
+    </button>
+
+    <script>
+        const ctx = document.getElementById('graficoEstados').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Nuevo', 'En análisis', 'En Proceso', 'Resuelto', 'Cerrado'],
+                datasets: [{
+                    data: [
+                        {{ totales.nuevo }},
+                        {{ totales.en_analisis }},
+                        {{ totales.en_proceso }},
+                        {{ totales.resueltos }},
+                        {{ totales.cerrados }}
+                    ],
+                    backgroundColor: ['orange', 'purple', 'blue', 'green', 'gray']
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { 
+                        position: 'bottom',
+                        labels: {
+                            color: 'black',
+                            font: { size: 14 }
+                        }
+                    },
+                    title: { 
+                        display: true, 
+                        text: 'Distribución de Reclamos por Estado' 
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                            if (sum === 0) return "";
+                            let percentage = (value * 100 / sum).toFixed(1) + "%";
+                            // Mostrar nombre + porcentaje
+                            return ctx.chart.data.labels[ctx.dataIndex] + " " + percentage;
+                        },
+                        color: '#fff',
+                        font: { weight: 'bold', size: 12 }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    </script>
+</body>
+</html>

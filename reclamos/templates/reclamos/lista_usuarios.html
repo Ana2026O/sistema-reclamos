@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Listado de Usuarios</title>
+<style>
+body { background:#f4f4f4; font-family:Arial, sans-serif; }
+.contenido { margin:40px; }
+.titulo { font-size:24px; font-weight:bold; margin-bottom:20px; text-align:center; }
+table { width:100%; border-collapse:collapse; background:white; }
+th, td { border:1px solid #ccc; padding:10px; text-align:center; }
+th { background:#214b78; color:white; }
+.acciones a { margin:0 5px; text-decoration:none; font-weight:bold; }
+.editar { color:#e8be63; }
+.eliminar { color:#e57373; }
+.nuevo { display:inline-block; margin-bottom:20px; padding:10px 15px; background:#214b78; color:white; text-decoration:none; border-radius:5px; }
+.volver { display:inline-block; margin-left:10px; padding:10px 15px; background:#6c757d; color:white; text-decoration:none; border-radius:5px; }
+.volver:hover { background:#565e64; }
+</style>
+</head>
+<body>
+
+<div class="contenido">
+    <div class="titulo">Listado de Usuarios</div>
+
+    <!-- Botón para ir al formulario de alta -->
+    <a href="{% url 'alta_usuario' %}" class="nuevo">+ Nuevo Usuario</a>
+    <!-- Botón para volver al formulario en blanco -->
+    <a href="{% url 'alta_usuario' %}" class="volver">Volver al Formulario</a>
+
+    <!-- Tabla de usuarios -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.username }}</td>
+            <td>
+                 {% for g in usuario.groups.all %}
+                    {{ g.name }}
+                    {% empty %}
+                     Sin rol
+                     {% endfor %}
+          </td>
+
+            <td>{{ usuario.first_name }}</td>
+            <td>{{ usuario.last_name }}</td>
+            <td>{{ usuario.email }}</td>
+
+            <td class="acciones">
+                <a href="{% url 'modificar_usuario' usuario.id %}" class="editar">✏️ Editar</a>
+                <a href="{% url 'eliminar_usuario' usuario.id %}" class="eliminar"
+                   onclick="return confirm('¿Seguro que querés eliminar este usuario?');">🗑 Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No hay usuarios registrados.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

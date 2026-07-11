@@ -1,0 +1,12 @@
+{% extends "reclamos/base.html" %}
+
+{% block content %}
+  <h2>¿Seguro que querés eliminar el reclamo {{ reclamo.id }}?</h2>
+  <p>{{ reclamo.descripcion }}</p>
+
+  <form method="POST">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+      <a href="{% url 'detalle_reclamo' reclamo.id %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consultas</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif;}
+body{background:#eef4f8;}
+
+/* MENU SUPERIOR */
+.header{height:60px;background:#1f4f82;color:white;display:flex;justify-content:space-between;align-items:center;padding:0 20px;}
+.logo strong{font-size:20px;}
+.menu{display:flex;align-items:center;gap:20px;}
+.menu a{color:white;text-decoration:none;font-weight:bold;}
+
+/* CONTENIDO */
+.contenedor{width:700px;margin:40px auto;}
+.titulo{font-size:20px;margin-bottom:15px;color:#1f4f82;text-align:center;}
+.panel{background:#cfe0eb;padding:25px;border-radius:8px;}
+.subtitulo{font-size:16px;color:#1f4f82;margin-bottom:25px;text-align:center;}
+
+/* FORMULARIO */
+.formulario{background:#dceaf3;padding:20px;border-radius:6px;}
+.fila{display:flex;gap:20px;}
+.campo{flex:1;}
+.campo label{display:block;margin-bottom:6px;font-size:14px;font-weight:bold;}
+.campo input{width:100%;height:30px;border:none;background:white;padding:6px;border-radius:4px;font-size:14px;}
+.botones{margin-top:20px;display:flex;justify-content:space-between;}
+.btn-consultar{background:#1f4f82;color:white;border:none;padding:10px 20px;font-size:15px;cursor:pointer;border-radius:4px;}
+.btn-nuevo{background:#f28c28;color:white;border:none;padding:10px 20px;font-size:15px;cursor:pointer;border-radius:4px;}
+
+/* RESULTADO */
+.resultado{margin-top:20px;padding:20px;border-radius:8px;font-size:15px;}
+.resultado.ok{background:#e8f5e9;color:#1b5e20;border:2px solid #a5d6a7;}
+.resultado.error{background:#ffebee;color:#b71c1c;border:2px solid #ef9a9a;}
+.resultado h3, .resultado h4{margin-bottom:10px;color:#1f4f82;}
+.info-reclamo p, .seguimiento p{margin:5px 0;}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo"><strong>Reclamos</strong> - Sistema de atención</div>
+    <div class="menu">
+        <div class="titulo-consultas">Consultas</div>
+        <a href="{% url 'inicio' %}">Salir</a>
+    </div>
+</header>
+
+<div class="contenedor">
+    <div class="titulo"></div>
+    <div class="panel">
+        <div class="subtitulo">Consulte el estado de su reclamo</div>
+
+        <form method="post" action="{% url 'consulta_reclamo' %}" class="formulario">
+            {% csrf_token %}
+            <div class="fila">
+                <div class="campo">
+                    <label>NOMBRE Y APELLIDO</label>
+                    <input type="text" name="nombre_apellido">
+                </div>
+                <div class="campo">
+                    <label>NÚMERO DE REFERENCIA</label>
+                    <input type="text" name="numero_referencia">
+                </div>
+            </div>
+
+            <div class="botones">
+                <button type="submit" class="btn-consultar">CONSULTAR</button>
+                <a href="{% url 'registrar_reclamo' %}" class="btn-nuevo">Nuevo reclamo</a>
+            </div>
+        </form>
+
+        <!-- Resultado estilizado -->
+        {% if resultado %}
+            {% if resultado.error %}
+                <div class="resultado error">
+                    <p>{{ resultado.error }}</p>
+                </div>
+            {% else %}
+                <div class="resultado ok">
+                    <h3>📋 Detalles del Reclamo</h3>
+                    <div class="info-reclamo">
+                        <p><strong>Número de reclamo:</strong> {{ resultado.numero }}</p>
+                        <p><strong>Nombre y apellido:</strong> {{ resultado.nombre }}</p>
+                        <p><strong>Estado:</strong> {{ resultado.estado }}</p>
+                        <p><strong>Categoría:</strong> {{ resultado.categoria }}</p>
+                    </div>
+
+                    {% if seguimiento %}
+                        <div class="seguimiento">
+                            <h4>📝 Último seguimiento</h4>
+                            <p><strong>Comentario:</strong> {{ seguimiento.comentario }}</p>
+                            <p><strong>Fecha:</strong> {{ seguimiento.fecha }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
