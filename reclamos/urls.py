@@ -1,6 +1,12 @@
 from django.urls import path
 from . import views
+from django.contrib import admin
+from django.urls import path, include
 
+urlpatterns = [
+    path('admin/', admin.site.urls),   # <- esta línea falta
+    path('', include('reclamos.urls')),  # tus rutas de la app
+]
 
 from .views import lista_usuarios, alta_usuario, eliminar_usuario
 
