@@ -102,6 +102,66 @@ python manage.py migrate
 📌 En Linux/Mac la activación cambia a:
 ```bash
 source venv/bin/activate
+
+
+## ☁️ Despliegue en PythonAnywhere
+
+1. **Crear cuenta** en [PythonAnywhere](https://www.pythonanywhere.com/).
+2. **Subir el proyecto**:
+   - Podés clonar tu repositorio desde GitHub:
+     ```bash
+     git clone https://github.com/usuario/sistema-reclamos.git
+     ```
+   - O subir los archivos manualmente.
+3. **Crear un virtualenv** en PythonAnywhere:
+   ```bash
+   mkvirtualenv --python=python3.12 venv
+   pip install -r requirements.txt
+
+Configurar la aplicación web:
+
+En el panel de PythonAnywhere, ir a Web → Add a new web app.
+
+Elegir Manual configuration → Django → versión de Python.
+
+Editar el archivo WSGI (/var/www/usuario_pythonanywhere_com_wsgi.py) para que apunte a tu proyecto:
+
+
+import os, sys
+
+path = '/home/usuario/sistema-reclamos'
+if path not in sys.path:
+    sys.path.append(path)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'sistema_reclamos.settings'
+
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
+
+5-Migrar la base de datos:
+
+python manage.py migrate
+
+6-Crear superusuario (si corresponde):
+python manage.py createsuperuser
+
+7-Reiniciar la aplicación web desde el panel de PythonAnywhere.
+
+
+Reiniciar la aplicación web desde el panel de PythonAnywhere.
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 
 
