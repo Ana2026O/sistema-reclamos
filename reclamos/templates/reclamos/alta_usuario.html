@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Alta de Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 30px;
+        }
+        .form-container {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 400px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #214b78;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #163a5c;
+        }
+        .btn-secondary {
+            margin-top: 10px;
+            width: 95%;
+            padding: 12px;
+            background: #6c757d; /* gris */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: #565e64;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Alta de Usuario</h2>
+        <form method="post">
+            {% csrf_token %}
+            
+            <label for="id_first_name">Nombre</label>
+            {{ form.first_name }}
+
+            <label for="id_last_name">Apellido</label>
+            {{ form.last_name }}
+
+            <!-- Username -->
+            <label for="id_username">Usuario</label>
+            {{ form.username }}
+
+            <!-- Email -->
+            <label for="id_email">Correo electrónico</label>
+            {{ form.email }}
+
+            <!-- Password -->
+            <label for="id_password">Contraseña</label>
+            {{ form.password }}
+
+            <!-- Role -->
+            <label for="id_role">Rol</label>
+            {{ form.role }}
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit" class="btn">Guardar</button>
+        </form>
+
+        <!-- Botones adicionales -->
+        <a href="{% url 'lista_usuarios' %}" class="btn-secondary">Acceder a la Lista</a>
+        <a href="{% url 'menu_admin' %}" class="btn-secondary">Volver al Menú</a>
+        <a href="{% url 'inicio' %}" class="btn-secondary">Volver al Inicio</a>
+    </div>
+</body>
+</html>

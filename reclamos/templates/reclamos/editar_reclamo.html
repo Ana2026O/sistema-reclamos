@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Reclamo</title>
+    <style>
+        body {
+            background-color: #fff8e1; /* amarillo claro tipo mostaza suave */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .contenedor {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            border: 2px solid #fbc02d; /* borde mostaza */
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #5d4037; /* marrón oscuro para contraste */
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* separación entre campos */
+        }
+
+        form p {
+            margin: 0;
+            color: #3e2723; /* texto más oscuro */
+            font-weight: bold;
+            font-size: 16px; /* etiquetas más grandes */
+        }
+
+        input, select, textarea {
+            font-size: 16px;        /* letras más grandes */
+            padding: 12px;          /* más espacio dentro del campo */
+            border: 1px solid #ccc; /* borde gris claro */
+            border-radius: 6px;     /* esquinas redondeadas */
+            width: 100%;            /* ocupa todo el ancho disponible */
+            box-sizing: border-box; /* evita que se desborde */
+        }
+
+        textarea {
+            min-height: 100px;      /* más alto para descripción */
+        }
+
+        button {
+            background: #fbc02d; /* mostaza */
+            color: #3e2723;      /* letras oscuras */
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            align-self: center;
+        }
+
+        button:hover {
+            background: #f57f17; /* mostaza más intenso */
+            color: white;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #5d4037; /* marrón oscuro */
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        a:hover {
+            color: #3e2723;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <h2>Editar Reclamo N° {{ reclamo.id }}</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">💾 Guardar Cambios</button>
+        </form>
+
+        <a href="{% url 'panel_control' %}">⬅ Volver al Panel</a>
+    </div>
+</body>
+</html>

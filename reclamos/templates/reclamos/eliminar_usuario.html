@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* gris claro */
+            color: #333;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #dc3545; /* rojo para el título */
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545; /* rojo intenso */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn-danger:hover {
+            background-color: #a71d2a; /* rojo más oscuro al pasar el mouse */
+        }
+
+        .btn-secondary {
+            background-color: #6c757d; /* gris */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background-color: #565e64;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Eliminar Usuario</h2>
+    <p>¿Seguro que querés eliminar al usuario <strong>{{ usuario.username }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">Sí, eliminar</button>
+        <a href="{% url 'lista_usuarios' %}" class="btn-secondary">Cancelar</a>
+    </form>
+</body>
+</html>
+
+
+

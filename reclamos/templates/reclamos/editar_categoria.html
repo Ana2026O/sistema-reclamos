@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Categoría</title>
+    {% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 480px;
+            margin: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-top: 15px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 6px;
+            margin-bottom: 10px;
+        }
+        button, .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-primary { background-color: #4CAF50; color: white; }
+        .btn-volver { background-color: #2196F3; color: white; display:block; margin-top:10px; text-align:center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Editar Categoría</h2>
+
+    <!-- Formulario de edición -->
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="nombre" value="{{ categoria.nombre }}" placeholder="Nombre de la categoría">
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+
+    <!-- Botón para volver al listado -->
+    <a href="{% url 'categorias' %}" class="btn btn-volver">Volver al Listado</a>
+</div>
+</body>
+</html>
+s

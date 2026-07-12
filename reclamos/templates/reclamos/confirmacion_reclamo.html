@@ -1,0 +1,183 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmación de Reclamo</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#f2f2f2;
+}
+
+/* ===== MENU SUPERIOR ===== */
+.header{
+    background:#1f4f82;
+    color:white;
+    height:70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 40px;
+}
+.logo{
+    font-size:28px;
+    font-weight:bold;
+}
+.subtitulo{
+    font-size:20px;
+    font-weight:normal;
+}
+.menu{
+    display:flex;
+    gap:40px;
+    font-size:18px;
+}
+.menu a{
+    color:white;
+    text-decoration:none;
+}
+
+/* ===== BANNER ===== */
+.banner{
+    height:370px;
+    background:
+    linear-gradient(rgba(20,70,120,0.75),rgba(20,70,120,0.75)),
+    url("{% static 'reclamos/img/banner.jpg' %}");
+    background-size:cover;
+    background-position:center;
+    color:white;
+    display:flex;
+    align-items:center;
+}
+.banner-texto{
+    margin-left:30px;
+}
+.banner-texto h3{
+    font-size:18px;
+    margin-bottom:20px;
+    font-weight:normal;
+}
+.banner-texto h1{
+    font-size:38px;
+    margin-bottom:35px;
+}
+.banner-texto p{
+    font-size:22px;
+}
+
+/* ===== CONFIRMACION ===== */
+.confirmacion{
+    margin-top:-10px;
+    text-align:center;
+}
+.icono-ok{
+    width:90px;
+    height:90px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    border:6px solid #34a853;
+    background:#ffffff;
+    color:#34a853;
+    font-size:55px;
+    font-weight:bold;
+    line-height:78px;
+}
+.tarjeta{
+    width:330px;
+    margin:0 auto;
+    background:#cfe0ed;
+    padding:25px;
+}
+.tarjeta h3{
+    font-size:20px;
+    color:#555;
+    margin-bottom:15px;
+}
+.tarjeta h1{
+    font-size:48px;
+    color:#1f4f82;
+    margin-bottom:20px;
+}
+.tarjeta p{
+    font-size:18px;
+    color:#444;
+}
+
+/* ===== BOTONES ===== */
+.botones{
+    margin-top:30px;
+    display:flex;
+    justify-content:center;
+    gap:30px;
+}
+.btn{
+    border:none;
+    padding:14px 35px;
+    font-size:18px;
+    cursor:pointer;
+    text-decoration:none;
+}
+.btn-pdf{
+    background:#1f4f82;
+    color:white;
+}
+.btn-nuevo{
+    background:#d9d9d9;
+    color:black;
+}
+.btn-consulta{
+    background:#34a853;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div>
+        <span class="logo">Reclamos</span>
+        <span class="subtitulo">- Sistema de atención al cliente</span>
+    </div>
+    <div class="menu">
+        <a href="{% url 'consulta_reclamo' %}">Mis Consultas</a>
+        <a href="{% url 'registrar_reclamo' %}">Salir</a>
+    </div>
+</header>
+
+<section class="banner">
+    <div class="banner-texto">
+        <h3>ATENCIÓN AL CLIENTE</h3>
+        <h1>¿Tuviste un inconveniente?<br>Registra tu reclamo aquí</h1>
+        <p>Nuestro equipo revisará y te contactará a la brevedad<br>Tiempo de respuesta: 48 hrs hábiles</p>
+    </div>
+</section>
+
+<section class="confirmacion">
+    <div class="icono-ok">✓</div>
+    <div class="tarjeta">
+        <h3>N° de Reclamo</h3>
+        <h1>REC-{{ reclamo.id }}</h1>
+        <p>{{ reclamo.fecha_creacion|date:"d/m/Y H:i" }}</p>
+        <p>Categoría: {{ reclamo.categoria }}</p>
+        <p>{{ reclamo.descripcion }}</p>
+    </div>
+    <div class="botones">
+        <a href="{% url 'descargar_pdf' reclamo.id %}" class="btn btn-pdf">📄 Descargar PDF</a>
+        <a href="{% url 'registrar_reclamo' %}" class="btn btn-nuevo">➕ Nuevo Reclamo</a>
+        <a href="{% url 'consulta_reclamo' %}" class="btn btn-consulta">🔍 Mis Consultas</a>
+    </div>
+</section>
+
+</body>
+</html>
